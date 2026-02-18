@@ -6,10 +6,19 @@
 
 # To list all registered routes, run the following command:
 #   bin/console debug:router
+# yaml-language-server: $schema=../vendor/symfony/routing/Loader/schema/routing.schema.json
 
 controllers:
-    resource: routing.controllers
+    resource: ../src/Controller/
+    type: attribute
+
+# Health check for Render
 healthz:
     path: /healthz
     controller: App\Controller\HealthController
+    methods: [GET]
+
+home:
+    path: /
+    controller: App\Controller\HomeController
     methods: [GET]
