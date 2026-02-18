@@ -9,3 +9,7 @@
 
 controllers:
     resource: routing.controllers
+healthz:
+    path: /healthz
+    controller: App\Controller\HealthController
+    methods: [GET]
