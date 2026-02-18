@@ -1,6 +1,6 @@
 FROM php:8.4-cli
 
-RUN php -v
+RUN echo "=== USING PHP VERSION ===" && php -v && echo "========================="
 
 RUN apt-get update && apt-get install -y \
     git unzip libzip-dev pkg-config libssl-dev \
