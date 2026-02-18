@@ -1,9 +1,17 @@
 nelmio_cors:
+    defaults:
+        allow_credentials: false
+        allow_origin: []
+        allow_origin_regex: true
+        allow_methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
+        allow_headers:
+            ["Content-Type", "Authorization", "Accept", "X-Requested-With"]
+        max_age: 3600
     paths:
-        "^/":
-            allow_origin: ["https://front-vite-et-gourmand.vercel.app"]
+        "^/api/":
+            allow_origin_regex: true
+            allow_origin: ['^https://.*\.vercel\.app$']
             allow_methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
             allow_headers:
                 ["Content-Type", "Authorization", "Accept", "X-Requested-With"]
-            expose_headers: ["Authorization"]
             max_age: 3600
