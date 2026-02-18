@@ -1,4 +1,3 @@
-
 ###> symfony/framework-bundle ###
 /.env.local
 /.env.local.php
@@ -13,8 +12,11 @@
 /phpunit.xml
 /.phpunit.cache/
 ###< phpunit/phpunit ###
+#Ignore vscode AI rules
+.github/instructions/codacy.instructions.md
 
-###> symfony/asset-mapper ###
-/public/assets/
-/assets/vendor/
-###< symfony/asset-mapper ###
+###> lexik/jwt-authentication-bundle ###
+#/config/jwt/*.pem
+###< lexik/jwt-authentication-bundle ###
+.DS_Store
+**/.DS_Store

@@ -148,7 +148,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         cookie_name?: scalar|Param|null, // The name of the cookie to use when using stateless protection. // Default: "csrf-token"
  *     },
  *     form?: bool|array{ // Form configuration
- *         enabled?: bool|Param, // Default: true
+ *         enabled?: bool|Param, // Default: false
  *         csrf_protection?: bool|array{
  *             enabled?: scalar|Param|null, // Default: null
  *             token_id?: scalar|Param|null, // Default: null
@@ -261,7 +261,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         formats?: array<string, string|list<scalar|Param|null>>,
  *     },
  *     assets?: bool|array{ // Assets configuration
- *         enabled?: bool|Param, // Default: true
+ *         enabled?: bool|Param, // Default: false
  *         strict_mode?: bool|Param, // Throw an exception if an entry is missing from the manifest.json. // Default: false
  *         version_strategy?: scalar|Param|null, // Default: null
  *         version?: scalar|Param|null, // Default: null
@@ -280,7 +280,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         }>,
  *     },
  *     asset_mapper?: bool|array{ // Asset Mapper configuration
- *         enabled?: bool|Param, // Default: true
+ *         enabled?: bool|Param, // Default: false
  *         paths?: array<string, scalar|Param|null>,
  *         excluded_patterns?: list<scalar|Param|null>,
  *         exclude_dotfiles?: bool|Param, // If true, any files starting with "." will be excluded from the asset mapper. // Default: true
@@ -299,7 +299,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         },
  *     },
  *     translator?: bool|array{ // Translator configuration
- *         enabled?: bool|Param, // Default: true
+ *         enabled?: bool|Param, // Default: false
  *         fallbacks?: list<scalar|Param|null>,
  *         logging?: bool|Param, // Default: false
  *         formatter?: scalar|Param|null, // Default: "translator.formatter.default"
@@ -891,114 +891,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     enable_profiler?: bool|Param, // Whether or not to enable the profiler collector to calculate and visualize migration status. This adds some queries overhead. // Default: false
  *     transactional?: bool|Param, // Whether or not to wrap migrations in a single transaction. // Default: true
  * }
- * @psalm-type DebugConfig = array{
- *     max_items?: int|Param, // Max number of displayed items past the first level, -1 means no limit. // Default: 2500
- *     min_depth?: int|Param, // Minimum tree depth to clone all the items, 1 is default. // Default: 1
- *     max_string_length?: int|Param, // Max length of displayed strings, -1 means no limit. // Default: -1
- *     dump_destination?: scalar|Param|null, // A stream URL where dumps should be written to. // Default: null
- *     theme?: "dark"|"light"|Param, // Changes the color of the dump() output when rendered directly on the templating. "dark" (default) or "light". // Default: "dark"
- * }
- * @psalm-type TwigConfig = array{
- *     form_themes?: list<scalar|Param|null>,
- *     globals?: array<string, array{ // Default: []
- *         id?: scalar|Param|null,
- *         type?: scalar|Param|null,
- *         value?: mixed,
- *     }>,
- *     autoescape_service?: scalar|Param|null, // Default: null
- *     autoescape_service_method?: scalar|Param|null, // Default: null
- *     cache?: scalar|Param|null, // Default: true
- *     charset?: scalar|Param|null, // Default: "%kernel.charset%"
- *     debug?: bool|Param, // Default: "%kernel.debug%"
- *     strict_variables?: bool|Param, // Default: "%kernel.debug%"
- *     auto_reload?: scalar|Param|null,
- *     optimizations?: int|Param,
- *     default_path?: scalar|Param|null, // The default path used to load templates. // Default: "%kernel.project_dir%/templates"
- *     file_name_pattern?: list<scalar|Param|null>,
- *     paths?: array<string, mixed>,
- *     date?: array{ // The default format options used by the date filter.
- *         format?: scalar|Param|null, // Default: "F j, Y H:i"
- *         interval_format?: scalar|Param|null, // Default: "%d days"
- *         timezone?: scalar|Param|null, // The timezone used when formatting dates, when set to null, the timezone returned by date_default_timezone_get() is used. // Default: null
- *     },
- *     number_format?: array{ // The default format options for the number_format filter.
- *         decimals?: int|Param, // Default: 0
- *         decimal_point?: scalar|Param|null, // Default: "."
- *         thousands_separator?: scalar|Param|null, // Default: ","
- *     },
- *     mailer?: array{
- *         html_to_text_converter?: scalar|Param|null, // A service implementing the "Symfony\Component\Mime\HtmlToTextConverter\HtmlToTextConverterInterface". // Default: null
- *     },
- * }
- * @psalm-type WebProfilerConfig = array{
- *     toolbar?: bool|array{ // Profiler toolbar configuration
- *         enabled?: bool|Param, // Default: false
- *         ajax_replace?: bool|Param, // Replace toolbar on AJAX requests // Default: false
- *     },
- *     intercept_redirects?: bool|Param, // Default: false
- *     excluded_ajax_paths?: scalar|Param|null, // Default: "^/((index|app(_[\\w]+)?)\\.php/)?_wdt"
- * }
- * @psalm-type StimulusConfig = array{
- *     controller_paths?: list<scalar|Param|null>,
- *     controllers_json?: scalar|Param|null, // Default: "%kernel.project_dir%/assets/controllers.json"
- * }
- * @psalm-type TurboConfig = array{
- *     broadcast?: bool|array{
- *         enabled?: bool|Param, // Default: true
- *         entity_template_prefixes?: list<scalar|Param|null>,
- *         doctrine_orm?: bool|array{ // Enable the Doctrine ORM integration
- *             enabled?: bool|Param, // Default: true
- *         },
- *     },
- *     default_transport?: scalar|Param|null, // Default: "default"
- * }
- * @psalm-type TwigExtraConfig = array{
- *     cache?: bool|array{
- *         enabled?: bool|Param, // Default: false
- *     },
- *     html?: bool|array{
- *         enabled?: bool|Param, // Default: false
- *     },
- *     markdown?: bool|array{
- *         enabled?: bool|Param, // Default: false
- *     },
- *     intl?: bool|array{
- *         enabled?: bool|Param, // Default: false
- *     },
- *     cssinliner?: bool|array{
- *         enabled?: bool|Param, // Default: false
- *     },
- *     inky?: bool|array{
- *         enabled?: bool|Param, // Default: false
- *     },
- *     string?: bool|array{
- *         enabled?: bool|Param, // Default: false
- *     },
- *     commonmark?: array{
- *         renderer?: array{ // Array of options for rendering HTML.
- *             block_separator?: scalar|Param|null,
- *             inner_separator?: scalar|Param|null,
- *             soft_break?: scalar|Param|null,
- *         },
- *         html_input?: "strip"|"allow"|"escape"|Param, // How to handle HTML input.
- *         allow_unsafe_links?: bool|Param, // Remove risky link and image URLs by setting this to false. // Default: true
- *         max_nesting_level?: int|Param, // The maximum nesting level for blocks. // Default: 9223372036854775807
- *         max_delimiters_per_line?: int|Param, // The maximum number of strong/emphasis delimiters per line. // Default: 9223372036854775807
- *         slug_normalizer?: array{ // Array of options for configuring how URL-safe slugs are created.
- *             instance?: mixed,
- *             max_length?: int|Param, // Default: 255
- *             unique?: mixed,
- *         },
- *         commonmark?: array{ // Array of options for configuring the CommonMark core extension.
- *             enable_em?: bool|Param, // Default: true
- *             enable_strong?: bool|Param, // Default: true
- *             use_asterisk?: bool|Param, // Default: true
- *             use_underscore?: bool|Param, // Default: true
- *             unordered_list_markers?: list<scalar|Param|null>,
- *         },
- *         ...<mixed>
- *     },
- * }
  * @psalm-type SecurityConfig = array{
  *     access_denied_url?: scalar|Param|null, // Default: null
  *     session_fixation_strategy?: "none"|"migrate"|"invalidate"|Param, // Default: "migrate"
@@ -1051,6 +943,14 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *             uid_key?: scalar|Param|null, // Default: "sAMAccountName"
  *             filter?: scalar|Param|null, // Default: "({uid_key}={user_identifier})"
  *             password_attribute?: scalar|Param|null, // Default: null
+ *         },
+ *         mongodb?: array{
+ *             class: scalar|Param|null, // The full entity class name of your user class.
+ *             property?: scalar|Param|null, // Default: null
+ *             manager_name?: scalar|Param|null, // Default: null
+ *         },
+ *         lexik_jwt?: array{
+ *             class?: scalar|Param|null, // Default: "Lexik\\Bundle\\JWTAuthenticationBundle\\Security\\User\\JWTUser"
  *         },
  *     }>,
  *     firewalls: array<string, array{ // Default: []
@@ -1109,6 +1009,10 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         remote_user?: array{
  *             provider?: scalar|Param|null,
  *             user?: scalar|Param|null, // Default: "REMOTE_USER"
+ *         },
+ *         jwt?: array{
+ *             provider?: scalar|Param|null, // Default: null
+ *             authenticator?: scalar|Param|null, // Default: "lexik_jwt_authentication.security.jwt_authenticator"
  *         },
  *         login_link?: array{
  *             check_route: scalar|Param|null, // Route that will validate the login link - e.g. "app_login_link_verify".
@@ -1455,6 +1359,277 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     generate_final_classes?: bool|Param, // Default: true
  *     generate_final_entities?: bool|Param, // Default: false
  * }
+ * @psalm-type DoctrineMongodbConfig = array{
+ *     document_managers?: array<string, array{ // Default: []
+ *         connection?: scalar|Param|null,
+ *         database?: scalar|Param|null,
+ *         logging?: bool|Param, // Default: "%kernel.debug%"
+ *         profiler?: bool|array{
+ *             enabled?: bool|Param, // Default: "%kernel.debug%"
+ *             pretty?: bool|Param, // Default: "%kernel.debug%"
+ *         },
+ *         default_document_repository_class?: scalar|Param|null, // Default: "Doctrine\\ODM\\MongoDB\\Repository\\DocumentRepository"
+ *         default_gridfs_repository_class?: scalar|Param|null, // Default: "Doctrine\\ODM\\MongoDB\\Repository\\DefaultGridFSRepository"
+ *         repository_factory?: scalar|Param|null, // Default: "doctrine_mongodb.odm.container_repository_factory"
+ *         persistent_collection_factory?: scalar|Param|null, // Default: null
+ *         auto_mapping?: bool|Param, // Default: false
+ *         filters?: array<string, string|array{ // Default: []
+ *             class: scalar|Param|null,
+ *             enabled?: bool|Param, // Default: false
+ *             parameters?: array<string, mixed>,
+ *         }>,
+ *         metadata_cache_driver?: string|array{
+ *             type?: scalar|Param|null, // Default: "array"
+ *             class?: scalar|Param|null,
+ *             host?: scalar|Param|null,
+ *             port?: int|Param,
+ *             instance_class?: scalar|Param|null,
+ *             id?: scalar|Param|null,
+ *             namespace?: scalar|Param|null,
+ *         },
+ *         use_transactional_flush?: bool|Param, // Default: false
+ *         mappings?: array<string, bool|string|array{ // Default: []
+ *             mapping?: scalar|Param|null, // Default: true
+ *             type?: scalar|Param|null,
+ *             dir?: scalar|Param|null,
+ *             prefix?: scalar|Param|null,
+ *             alias?: scalar|Param|null,
+ *             is_bundle?: bool|Param,
+ *         }>,
+ *     }>,
+ *     connections?: array<string, array{ // Default: []
+ *         server?: scalar|Param|null,
+ *         options?: array{
+ *             authMechanism?: "SCRAM-SHA-1"|"SCRAM-SHA-256"|"MONGODB-CR"|"MONGODB-X509"|"PLAIN"|"GSSAPI"|Param,
+ *             connectTimeoutMS?: int|Param,
+ *             db?: scalar|Param|null,
+ *             authSource?: scalar|Param|null,
+ *             journal?: bool|Param,
+ *             password?: scalar|Param|null,
+ *             readPreference?: "primary"|"primaryPreferred"|"secondary"|"secondaryPreferred"|"nearest"|Param,
+ *             readPreferenceTags?: list<array<string, scalar|Param|null>>,
+ *             replicaSet?: scalar|Param|null,
+ *             socketTimeoutMS?: int|Param,
+ *             ssl?: bool|Param,
+ *             tls?: bool|Param,
+ *             tlsAllowInvalidCertificates?: bool|Param,
+ *             tlsAllowInvalidHostnames?: bool|Param,
+ *             tlsCAFile?: scalar|Param|null,
+ *             tlsCertificateKeyFile?: scalar|Param|null,
+ *             tlsCertificateKeyFilePassword?: scalar|Param|null,
+ *             tlsDisableCertificateRevocationCheck?: bool|Param,
+ *             tlsDisableOCSPEndpointCheck?: bool|Param,
+ *             tlsInsecure?: bool|Param,
+ *             username?: scalar|Param|null,
+ *             retryReads?: bool|Param,
+ *             retryWrites?: bool|Param,
+ *             w?: scalar|Param|null,
+ *             wTimeoutMS?: int|Param,
+ *         },
+ *         driver_options?: array{
+ *             context?: scalar|Param|null, // Deprecated: The "context" driver option is deprecated and will be removed in 3.0. This option is ignored by the MongoDB driver version 2. // Default: null
+ *         },
+ *         autoEncryption?: array{
+ *             bypassAutoEncryption?: bool|Param,
+ *             keyVaultClient?: scalar|Param|null,
+ *             keyVaultNamespace?: scalar|Param|null,
+ *             masterKey?: list<mixed>,
+ *             kmsProvider: array{
+ *                 type: scalar|Param|null,
+ *                 accessKeyId?: scalar|Param|null,
+ *                 secretAccessKey?: scalar|Param|null,
+ *                 sessionToken?: scalar|Param|null,
+ *                 tenantId?: scalar|Param|null,
+ *                 clientId?: scalar|Param|null,
+ *                 clientSecret?: scalar|Param|null,
+ *                 keyVaultEndpoint?: scalar|Param|null,
+ *                 identityPlatformEndpoint?: scalar|Param|null,
+ *                 keyName?: scalar|Param|null,
+ *                 keyVersion?: scalar|Param|null,
+ *                 email?: scalar|Param|null,
+ *                 privateKey?: scalar|Param|null,
+ *                 endpoint?: scalar|Param|null,
+ *                 projectId?: scalar|Param|null,
+ *                 location?: scalar|Param|null,
+ *                 keyRing?: scalar|Param|null,
+ *                 key?: scalar|Param|null,
+ *             },
+ *             schemaMap?: list<mixed>,
+ *             encryptedFieldsMap?: array<string, array{ // Default: []
+ *                 fields?: list<array{ // Default: []
+ *                     path: scalar|Param|null,
+ *                     bsonType: scalar|Param|null,
+ *                     keyId: mixed,
+ *                     queries?: array{
+ *                         queryType: scalar|Param|null,
+ *                         min?: mixed,
+ *                         max?: mixed,
+ *                         sparsity?: int|Param,
+ *                         precision?: int|Param,
+ *                         trimFactor?: int|Param,
+ *                         contention?: int|Param,
+ *                     },
+ *                 }>,
+ *             }>,
+ *             extraOptions?: array{
+ *                 mongocryptdURI?: scalar|Param|null,
+ *                 mongocryptdBypassSpawn?: bool|Param,
+ *                 mongocryptdSpawnPath?: scalar|Param|null,
+ *                 mongocryptdSpawnArgs?: list<scalar|Param|null>,
+ *                 cryptSharedLibPath?: scalar|Param|null,
+ *                 cryptSharedLibRequired?: bool|Param,
+ *             },
+ *             bypassQueryAnalysis?: bool|Param,
+ *             tlsOptions?: array{
+ *                 tlsCAFile?: scalar|Param|null,
+ *                 tlsCertificateKeyFile?: scalar|Param|null,
+ *                 tlsCertificateKeyFilePassword?: scalar|Param|null,
+ *                 tlsDisableOCSPEndpointCheck?: bool|Param,
+ *             },
+ *         },
+ *     }>,
+ *     resolve_target_documents?: array<string, scalar|Param|null>,
+ *     types?: array<string, string|array{ // Default: []
+ *         class: scalar|Param|null,
+ *     }>,
+ *     proxy_namespace?: scalar|Param|null, // Default: "MongoDBODMProxies"
+ *     proxy_dir?: scalar|Param|null, // Default: "%kernel.cache_dir%/doctrine/odm/mongodb/Proxies"
+ *     enable_native_lazy_objects?: bool|Param, // Deprecated: The "enable_native_lazy_objects" option is deprecated and will be removed in 6.0. Native Lazy Objects are enable by default when using PHP 8.4+ and doctrine/mongodb-odm 2.14+. // Requires PHP 8.4+ and doctrine/mongodb-odm 2.14+ // Default: true
+ *     enable_lazy_ghost_objects?: bool|Param, // Deprecated: The "enable_lazy_ghost_objects" option is deprecated and will be removed in 6.0. Symfony Lazy Ghost Objects are enabled by default with doctrine/mongodb-odm 2.10+. // Requires doctrine/mongodb-odm 2.10+ // Default: true
+ *     auto_generate_proxy_classes?: scalar|Param|null, // Default: 3
+ *     hydrator_namespace?: scalar|Param|null, // Default: "Hydrators"
+ *     hydrator_dir?: scalar|Param|null, // Default: "%kernel.cache_dir%/doctrine/odm/mongodb/Hydrators"
+ *     auto_generate_hydrator_classes?: scalar|Param|null, // Default: 0
+ *     persistent_collection_namespace?: scalar|Param|null, // Default: "PersistentCollections"
+ *     persistent_collection_dir?: scalar|Param|null, // Default: "%kernel.cache_dir%/doctrine/odm/mongodb/PersistentCollections"
+ *     auto_generate_persistent_collection_classes?: scalar|Param|null, // Default: 0
+ *     default_document_manager?: scalar|Param|null,
+ *     default_connection?: scalar|Param|null,
+ *     default_database?: scalar|Param|null, // Default: "default"
+ *     default_commit_options?: array{
+ *         j?: bool|Param,
+ *         timeout?: int|Param,
+ *         w?: scalar|Param|null,
+ *         wtimeout?: int|Param,
+ *     },
+ *     controller_resolver?: bool|array{
+ *         enabled?: bool|Param, // Default: true
+ *         auto_mapping?: bool|Param, // Set to false to disable using route placeholders as lookup criteria when the object id doesn't match the argument name // Default: true
+ *     },
+ * }
+ * @psalm-type NelmioCorsConfig = array{
+ *     defaults?: array{
+ *         allow_credentials?: bool|Param, // Default: false
+ *         allow_origin?: list<scalar|Param|null>,
+ *         allow_headers?: list<scalar|Param|null>,
+ *         allow_methods?: list<scalar|Param|null>,
+ *         allow_private_network?: bool|Param, // Default: false
+ *         expose_headers?: list<scalar|Param|null>,
+ *         max_age?: scalar|Param|null, // Default: 0
+ *         hosts?: list<scalar|Param|null>,
+ *         origin_regex?: bool|Param, // Default: false
+ *         forced_allow_origin_value?: scalar|Param|null, // Default: null
+ *         skip_same_as_origin?: bool|Param, // Default: true
+ *     },
+ *     paths?: array<string, array{ // Default: []
+ *         allow_credentials?: bool|Param,
+ *         allow_origin?: list<scalar|Param|null>,
+ *         allow_headers?: list<scalar|Param|null>,
+ *         allow_methods?: list<scalar|Param|null>,
+ *         allow_private_network?: bool|Param,
+ *         expose_headers?: list<scalar|Param|null>,
+ *         max_age?: scalar|Param|null, // Default: 0
+ *         hosts?: list<scalar|Param|null>,
+ *         origin_regex?: bool|Param,
+ *         forced_allow_origin_value?: scalar|Param|null, // Default: null
+ *         skip_same_as_origin?: bool|Param,
+ *     }>,
+ * }
+ * @psalm-type LexikJwtAuthenticationConfig = array{
+ *     public_key?: scalar|Param|null, // The key used to sign tokens (useless for HMAC). If not set, the key will be automatically computed from the secret key. // Default: null
+ *     additional_public_keys?: list<scalar|Param|null>,
+ *     secret_key?: scalar|Param|null, // The key used to sign tokens. It can be a raw secret (for HMAC), a raw RSA/ECDSA key or the path to a file itself being plaintext or PEM. // Default: null
+ *     pass_phrase?: scalar|Param|null, // The key passphrase (useless for HMAC) // Default: ""
+ *     token_ttl?: scalar|Param|null, // Default: 3600
+ *     allow_no_expiration?: bool|Param, // Allow tokens without "exp" claim (i.e. indefinitely valid, no lifetime) to be considered valid. Caution: usage of this should be rare. // Default: false
+ *     clock_skew?: scalar|Param|null, // Default: 0
+ *     encoder?: array{
+ *         service?: scalar|Param|null, // Default: "lexik_jwt_authentication.encoder.lcobucci"
+ *         signature_algorithm?: scalar|Param|null, // Default: "RS256"
+ *     },
+ *     user_id_claim?: scalar|Param|null, // Default: "username"
+ *     token_extractors?: array{
+ *         authorization_header?: bool|array{
+ *             enabled?: bool|Param, // Default: true
+ *             prefix?: scalar|Param|null, // Default: "Bearer"
+ *             name?: scalar|Param|null, // Default: "Authorization"
+ *         },
+ *         cookie?: bool|array{
+ *             enabled?: bool|Param, // Default: false
+ *             name?: scalar|Param|null, // Default: "BEARER"
+ *         },
+ *         query_parameter?: bool|array{
+ *             enabled?: bool|Param, // Default: false
+ *             name?: scalar|Param|null, // Default: "bearer"
+ *         },
+ *         split_cookie?: bool|array{
+ *             enabled?: bool|Param, // Default: false
+ *             cookies?: list<scalar|Param|null>,
+ *         },
+ *     },
+ *     remove_token_from_body_when_cookies_used?: scalar|Param|null, // Default: true
+ *     set_cookies?: array<string, array{ // Default: []
+ *         lifetime?: scalar|Param|null, // The cookie lifetime. If null, the "token_ttl" option value will be used // Default: null
+ *         samesite?: "none"|"lax"|"strict"|Param, // Default: "lax"
+ *         path?: scalar|Param|null, // Default: "/"
+ *         domain?: scalar|Param|null, // Default: null
+ *         secure?: scalar|Param|null, // Default: true
+ *         httpOnly?: scalar|Param|null, // Default: true
+ *         partitioned?: scalar|Param|null, // Default: false
+ *         split?: list<scalar|Param|null>,
+ *     }>,
+ *     api_platform?: bool|array{ // API Platform compatibility: add check_path in OpenAPI documentation.
+ *         enabled?: bool|Param, // Default: false
+ *         check_path?: scalar|Param|null, // The login check path to add in OpenAPI. // Default: null
+ *         username_path?: scalar|Param|null, // The path to the username in the JSON body. // Default: null
+ *         password_path?: scalar|Param|null, // The path to the password in the JSON body. // Default: null
+ *     },
+ *     access_token_issuance?: bool|array{
+ *         enabled?: bool|Param, // Default: false
+ *         signature?: array{
+ *             algorithm: scalar|Param|null, // The algorithm use to sign the access tokens.
+ *             key: scalar|Param|null, // The signature key. It shall be JWK encoded.
+ *         },
+ *         encryption?: bool|array{
+ *             enabled?: bool|Param, // Default: false
+ *             key_encryption_algorithm: scalar|Param|null, // The key encryption algorithm is used to encrypt the token.
+ *             content_encryption_algorithm: scalar|Param|null, // The key encryption algorithm is used to encrypt the token.
+ *             key: scalar|Param|null, // The encryption key. It shall be JWK encoded.
+ *         },
+ *     },
+ *     access_token_verification?: bool|array{
+ *         enabled?: bool|Param, // Default: false
+ *         signature?: array{
+ *             header_checkers?: list<scalar|Param|null>,
+ *             claim_checkers?: list<scalar|Param|null>,
+ *             mandatory_claims?: list<scalar|Param|null>,
+ *             allowed_algorithms?: list<scalar|Param|null>,
+ *             keyset: scalar|Param|null, // The signature keyset. It shall be JWKSet encoded.
+ *         },
+ *         encryption?: bool|array{
+ *             enabled?: bool|Param, // Default: false
+ *             continue_on_decryption_failure?: bool|Param, // If enable, non-encrypted tokens or tokens that failed during decryption or verification processes are accepted. // Default: false
+ *             header_checkers?: list<scalar|Param|null>,
+ *             allowed_key_encryption_algorithms?: list<scalar|Param|null>,
+ *             allowed_content_encryption_algorithms?: list<scalar|Param|null>,
+ *             keyset: scalar|Param|null, // The encryption keyset. It shall be JWKSet encoded.
+ *         },
+ *     },
+ *     blocklist_token?: bool|array{
+ *         enabled?: bool|Param, // Default: false
+ *         cache?: scalar|Param|null, // Storage to track blocked tokens // Default: "cache.app"
+ *     },
+ * }
  * @psalm-type ConfigType = array{
  *     imports?: ImportsConfig,
  *     parameters?: ParametersConfig,
@@ -1462,12 +1637,11 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     framework?: FrameworkConfig,
  *     doctrine?: DoctrineConfig,
  *     doctrine_migrations?: DoctrineMigrationsConfig,
- *     twig?: TwigConfig,
- *     stimulus?: StimulusConfig,
- *     turbo?: TurboConfig,
- *     twig_extra?: TwigExtraConfig,
  *     security?: SecurityConfig,
  *     monolog?: MonologConfig,
+ *     doctrine_mongodb?: DoctrineMongodbConfig,
+ *     nelmio_cors?: NelmioCorsConfig,
+ *     lexik_jwt_authentication?: LexikJwtAuthenticationConfig,
  *     "when@dev"?: array{
  *         imports?: ImportsConfig,
  *         parameters?: ParametersConfig,
@@ -1475,15 +1649,12 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         framework?: FrameworkConfig,
  *         doctrine?: DoctrineConfig,
  *         doctrine_migrations?: DoctrineMigrationsConfig,
- *         debug?: DebugConfig,
- *         twig?: TwigConfig,
- *         web_profiler?: WebProfilerConfig,
- *         stimulus?: StimulusConfig,
- *         turbo?: TurboConfig,
- *         twig_extra?: TwigExtraConfig,
  *         security?: SecurityConfig,
  *         monolog?: MonologConfig,
  *         maker?: MakerConfig,
+ *         doctrine_mongodb?: DoctrineMongodbConfig,
+ *         nelmio_cors?: NelmioCorsConfig,
+ *         lexik_jwt_authentication?: LexikJwtAuthenticationConfig,
  *     },
  *     "when@prod"?: array{
  *         imports?: ImportsConfig,
@@ -1492,12 +1663,11 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         framework?: FrameworkConfig,
  *         doctrine?: DoctrineConfig,
  *         doctrine_migrations?: DoctrineMigrationsConfig,
- *         twig?: TwigConfig,
- *         stimulus?: StimulusConfig,
- *         turbo?: TurboConfig,
- *         twig_extra?: TwigExtraConfig,
  *         security?: SecurityConfig,
  *         monolog?: MonologConfig,
+ *         doctrine_mongodb?: DoctrineMongodbConfig,
+ *         nelmio_cors?: NelmioCorsConfig,
+ *         lexik_jwt_authentication?: LexikJwtAuthenticationConfig,
  *     },
  *     "when@test"?: array{
  *         imports?: ImportsConfig,
@@ -1506,13 +1676,11 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         framework?: FrameworkConfig,
  *         doctrine?: DoctrineConfig,
  *         doctrine_migrations?: DoctrineMigrationsConfig,
- *         twig?: TwigConfig,
- *         web_profiler?: WebProfilerConfig,
- *         stimulus?: StimulusConfig,
- *         turbo?: TurboConfig,
- *         twig_extra?: TwigExtraConfig,
  *         security?: SecurityConfig,
  *         monolog?: MonologConfig,
+ *         doctrine_mongodb?: DoctrineMongodbConfig,
+ *         nelmio_cors?: NelmioCorsConfig,
+ *         lexik_jwt_authentication?: LexikJwtAuthenticationConfig,
  *     },
  *     ...<string, ExtensionType|array{ // extra keys must follow the when@%env% pattern or match an extension alias
  *         imports?: ImportsConfig,

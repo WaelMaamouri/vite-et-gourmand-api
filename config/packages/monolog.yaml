@@ -53,3 +53,8 @@ when@prod:
                 channels: [deprecation]
                 path: php://stderr
                 formatter: monolog.formatter.json
+            mailer:
+                type: stream
+                path: "%kernel.logs_dir%/mailer.log"
+                level: debug
+                channels: ["mailer"]
