@@ -28,4 +28,4 @@ RUN mkdir -p var/cache var/log && chmod -R 777 var
 RUN php -d variables_order=EGPCS bin/console cache:clear --env=prod || true
 
 # Render provides PORT
-CMD php -S 0.0.0.0:${PORT} -t public
+CMD sh -lc 'php bin/console doctrine:migrations:migrate --no-interaction --env=prod || true; php -S 0.0.0.0:${PORT} -t public'
