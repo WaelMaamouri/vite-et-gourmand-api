@@ -28,16 +28,18 @@ security:
             jwt: ~
 
         main:
-            lazy: true
-            provider: app_user_provider
+            pattern: ^/
+            security: false
 
-    # ✅ ICI (pas dans firewalls)
     access_control:
-        - { path: ^/api/auth/register$, roles: PUBLIC_ACCESS }
+        # Public
+        - { path: ^/healthz$, roles: PUBLIC_ACCESS }
         - { path: ^/api/login_check$, roles: PUBLIC_ACCESS }
+        - { path: ^/api/auth/register$, roles: PUBLIC_ACCESS }
         - { path: ^/api/menus, roles: PUBLIC_ACCESS }
-        - { path: ^/api/avis$, roles: PUBLIC_ACCESS }
+        - { path: ^/api/avis, roles: PUBLIC_ACCESS }
 
+        # Roles
         - { path: ^/api/admin, roles: ROLE_ADMIN }
         - { path: ^/api/employe, roles: ROLE_EMPLOYE }
         - { path: ^/api/commandes, roles: ROLE_USER }
