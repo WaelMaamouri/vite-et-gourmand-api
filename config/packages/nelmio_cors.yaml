@@ -1,17 +1,21 @@
 nelmio_cors:
     defaults:
-        allow_credentials: false
-        allow_origin: []
-        allow_origin_regex: true
+        origin_regex: true
+        allow_origin: ['^https://.*\.vercel\.app$']
         allow_methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
         allow_headers:
             ["Content-Type", "Authorization", "Accept", "X-Requested-With"]
+        expose_headers: ["Authorization"]
         max_age: 3600
+        allow_credentials: false
+
     paths:
         "^/api/":
-            allow_origin_regex: true
+            origin_regex: true
             allow_origin: ['^https://.*\.vercel\.app$']
             allow_methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
             allow_headers:
                 ["Content-Type", "Authorization", "Accept", "X-Requested-With"]
+            expose_headers: ["Authorization"]
             max_age: 3600
+            allow_credentials: false
