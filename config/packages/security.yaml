@@ -40,6 +40,8 @@ security:
         - { path: ^/healthz$, roles: PUBLIC_ACCESS }
         - { path: ^/api/login_check$, roles: PUBLIC_ACCESS }
         - { path: ^/api/auth/register$, roles: PUBLIC_ACCESS }
+        - { path: ^/api/auth/forgot-password$, roles: PUBLIC_ACCESS }
+        - { path: ^/api/auth/reset-password$, roles: PUBLIC_ACCESS }
         - { path: ^/api/menus, roles: PUBLIC_ACCESS }
         - { path: ^/api/avis, roles: PUBLIC_ACCESS }
 

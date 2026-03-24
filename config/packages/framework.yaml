@@ -2,9 +2,6 @@
 framework:
     secret: "%env(APP_SECRET)%"
 
-    mailer:
-        dsn: "%env(MAILER_DSN)%"
-
     # Note that the session will be started ONLY if you read or write from it.
     session: true
 
