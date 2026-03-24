@@ -46,8 +46,10 @@ passer une commande en ligne après inscription.
 
 ## Déploiement Render / Docker
 
-- **Migrations** : ce projet ne lance plus de migrations au démarrage. Si les logs Render affichent encore `doctrine:migrations:migrate`, tu déploies une **ancienne révision** ou une **Start Command** personnalisée qui force cette commande : vide-la pour utiliser le `CMD` du `Dockerfile`, ou retire la ligne `migrate`.
-- **Health check** : configure le chemin **`/healthz`** (léger, sans base obligatoire pour la réponse). Cela limite les *Timed Out* si `/` est lent.
+- **Start Command (dashboard Render)** : laisse **vide** pour utiliser le `CMD` du `Dockerfile`. Si tu y mets `doctrine:migrations:migrate && …`, une migration en erreur **empêche** `php -S` de tourner → *Port scan timeout* / *no open ports* alors que la cause réelle est la migration.
+- **Migrations** : pas de `migrate` au démarrage (schéma géré comme en local : `schema:update` ou SQL revu). Si les logs affichent `Table 'avis' already exists` : vide la Start Command et redéploie. Si tu dois vraiment utiliser les migrations Doctrine, marque **une fois** la version déjà appliquée : `php bin/console doctrine:migrations:version 'DoctrineMigrations\Version20260209202407' --add --no-interaction --env=prod` (adapte le nom de classe au fichier dans `migrations/`), ou corrige le fichier de migration avant de relancer `migrate` depuis un shell Render.
+- **Blueprint** : `render.yaml` à la racine (`healthCheckPath: /healthz`, sans `startCommand`).
+- **Health check** : chemin **`/healthz`** dans les paramètres du service.
 - **Routeur Symfony** : le `Dockerfile` utilise `php -S … -t public public/index.php`. Sans `public/index.php`, les URLs `/api/...` renvoient 404 et le health check échoue.
 - **Avertissement Doctrine (MySQL avant la v8)** : ta base est vue comme une version ancienne ; planifie une montée vers **MySQL 8+** chez ton hébergeur (recommandé avant DBAL 5).
 

@@ -1,0 +1,10 @@
+# Blueprint Render : ne pas surcharger le CMD du Dockerfile.
+# Si "Start Command" dans le dashboard contient doctrine:migrations:migrate, le déploiement
+# peut échouer (ex. table déjà existante) et le serveur ne démarre pas → "Port scan timeout".
+services:
+  - type: web
+    name: vite-et-gourmand-api
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /healthz
+    # Pas de startCommand : utilise CMD du Dockerfile (php -S sur $PORT)

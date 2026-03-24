@@ -27,5 +27,7 @@ RUN mkdir -p var/cache var/log && chmod -R 777 var
 # Warm cache (won't fail build if env not available)
 RUN php -d variables_order=EGPCS bin/console cache:clear --env=prod || true
 
-# Render fournit PORT. Le script routeur est obligatoire : sans lui, /api/* et /healthz renvoient 404 et le health check Render time out.
-CMD sh -lc 'php -S 0.0.0.0:${PORT} -t public public/index.php'
+# Render injecte PORT pour les Web Services. Ne pas chaîner doctrine:migrations:migrate ici :
+# si la migration échoue, PHP ne démarre pas → "Port scan timeout" sur Render.
+# Le script routeur public/index.php est obligatoire pour /api/* et /healthz.
+CMD sh -lc 'exec php -S "0.0.0.0:${PORT}" -t public public/index.php'
