@@ -5,6 +5,7 @@ namespace App\Controller\Api;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use App\Service\MailService;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -85,14 +86,29 @@ class AuthApiController extends AbstractController
 
         $user->setPassword($hasher->hashPassword($user, $password));
 
-        $em->persist($user);
-        $em->flush();
+        try {
+            $em->persist($user);
+            $em->flush();
+        } catch (\Throwable $e) {
+            for ($ex = $e; $ex !== null; $ex = $ex->getPrevious()) {
+                if ($ex instanceof UniqueConstraintViolationException) {
+                    return $this->json(['message' => 'Email déjà utilisé'], 409);
+                }
+            }
+            $logger->error('Inscription : échec en base — ' . $e->getMessage(), [
+                'exception' => $e,
+            ]);
 
+            return $this->json(['message' => 'Impossible de créer le compte pour le moment. Réessayez plus tard.'], 503);
+        }
+
+        // Toute erreur mail (DSN manquant, Brevo, etc.) : le compte existe déjà — ne pas renvoyer 500.
         try {
             $mailService->sendRegistrationConfirmation($user->getEmail() ?? '', (string) $user->getPrenom());
-        } catch (TransportExceptionInterface $e) {
+        } catch (\Throwable $e) {
             $logger->warning('Email de confirmation inscription non envoyé : ' . $e->getMessage(), [
                 'email' => $user->getEmail(),
+                'exception' => $e,
             ]);
         }
 
