@@ -36,12 +36,20 @@ passer une commande en ligne après inscription.
 1. Configurer la base de données dans le fichier `.env`
 2. Créer la base :
    `php bin/console doctrine:database:create`
-3. Lancer les migrations :
-   `php bin/console doctrine:migrations:migrate`
+3. Mettre le schéma SQL au niveau des entités (pas de migrations versionnées dans ce projet) :
+   `php bin/console doctrine:schema:update --force`  
+   En production, préfère appliquer le SQL généré par `doctrine:schema:update --dump-sql` après relecture.
 4. Charger les menus de test :
    `php bin/console doctrine:fixtures:load`
 5. Démarrer le serveur :
    `symfony serve`
+
+## Déploiement Render / Docker
+
+- **Migrations** : ce projet ne lance plus de migrations au démarrage. Si les logs Render affichent encore `doctrine:migrations:migrate`, tu déploies une **ancienne révision** ou une **Start Command** personnalisée qui force cette commande : vide-la pour utiliser le `CMD` du `Dockerfile`, ou retire la ligne `migrate`.
+- **Health check** : configure le chemin **`/healthz`** (léger, sans base obligatoire pour la réponse). Cela limite les *Timed Out* si `/` est lent.
+- **Routeur Symfony** : le `Dockerfile` utilise `php -S … -t public public/index.php`. Sans `public/index.php`, les URLs `/api/...` renvoient 404 et le health check échoue.
+- **Avertissement Doctrine (MySQL avant la v8)** : ta base est vue comme une version ancienne ; planifie une montée vers **MySQL 8+** chez ton hébergeur (recommandé avant DBAL 5).
 
 ## Comptes
 

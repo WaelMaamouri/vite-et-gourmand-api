@@ -27,5 +27,5 @@ RUN mkdir -p var/cache var/log && chmod -R 777 var
 # Warm cache (won't fail build if env not available)
 RUN php -d variables_order=EGPCS bin/console cache:clear --env=prod || true
 
-# Render provides PORT
-CMD sh -lc 'php bin/console doctrine:migrations:migrate --no-interaction --env=prod || true; php -S 0.0.0.0:${PORT} -t public'
+# Render fournit PORT. Le script routeur est obligatoire : sans lui, /api/* et /healthz renvoient 404 et le health check Render time out.
+CMD sh -lc 'php -S 0.0.0.0:${PORT} -t public public/index.php'
