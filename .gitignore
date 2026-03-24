@@ -9,6 +9,9 @@
 /vendor/
 ###< symfony/framework-bundle ###
 
+# Fichiers envoyés par l’admin (images menus)
+/public/uploads/
+
 ###> phpunit/phpunit ###
 /phpunit.xml
 /.phpunit.cache/

@@ -6,6 +6,8 @@ use App\Entity\Menu;
 use App\Repository\MenuRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
@@ -37,6 +39,55 @@ class AdminMenuApiController extends AbstractController
         ], $menus);
 
         return $this->json($data);
+    }
+
+    /**
+     * Upload d’une image de menu (multipart, champ « file »).
+     * Réponse : { "path": "/uploads/menus/...." } pour le champ image du menu.
+     */
+    #[Route('/upload', name: 'api_admin_menus_upload', methods: ['POST'])]
+    public function upload(Request $request): JsonResponse
+    {
+        /** @var UploadedFile|null $file */
+        $file = $request->files->get('file');
+        if (!$file instanceof UploadedFile || !$file->isValid()) {
+            return $this->json(['message' => 'Fichier « file » manquant ou invalide.'], 400);
+        }
+
+        $maxBytes = 5 * 1024 * 1024;
+        if ($file->getSize() > $maxBytes) {
+            return $this->json(['message' => 'Fichier trop volumineux (max 5 Mo).'], 413);
+        }
+
+        $mime = (string) $file->getMimeType();
+        $allowed = [
+            'image/jpeg' => 'jpg',
+            'image/png' => 'png',
+            'image/webp' => 'webp',
+            'image/gif' => 'gif',
+        ];
+        if (!isset($allowed[$mime])) {
+            return $this->json(['message' => 'Type non autorisé (JPEG, PNG, WebP, GIF).'], 415);
+        }
+
+        $ext = $allowed[$mime];
+        $safeName = bin2hex(random_bytes(16)) . '.' . $ext;
+
+        $projectDir = $this->getParameter('kernel.project_dir');
+        $targetDir = $projectDir . '/public/uploads/menus';
+        if (!is_dir($targetDir) && !mkdir($targetDir, 0775, true) && !is_dir($targetDir)) {
+            return $this->json(['message' => 'Impossible de créer le dossier d’upload.'], 500);
+        }
+
+        try {
+            $file->move($targetDir, $safeName);
+        } catch (FileException) {
+            return $this->json(['message' => 'Impossible d’enregistrer le fichier.'], 500);
+        }
+
+        $path = '/uploads/menus/' . $safeName;
+
+        return $this->json(['path' => $path], 201);
     }
 
     #[Route('', name: 'api_admin_menus_create', methods: ['POST'])]
