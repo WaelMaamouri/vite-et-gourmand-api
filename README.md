@@ -52,6 +52,7 @@ passer une commande en ligne après inscription.
 - **Health check** : chemin **`/healthz`** dans les paramètres du service.
 - **Routeur Symfony** : le `Dockerfile` utilise `php -S … -t public public/index.php`. Sans `public/index.php`, les URLs `/api/...` renvoient 404 et le health check échoue.
 - **Avertissement Doctrine (MySQL avant la v8)** : ta base est vue comme une version ancienne ; planifie une montée vers **MySQL 8+** chez ton hébergeur (recommandé avant DBAL 5).
+- **503 sur `/api/menus` ou `/api/auth/register`** : en prod, vérifie `DATABASE_URL` sur Render (hôte, mot de passe, nom de base, `?serverVersion=…`). Compare le schéma MySQL avec les entités : `php bin/console doctrine:schema:update --dump-sql` en local puis applique ce qui manque sur la BDD distante (tables `menu`, `users`, colonnes `theme`, `regime`, `reset_token`, etc.).
 
 ## Comptes
 

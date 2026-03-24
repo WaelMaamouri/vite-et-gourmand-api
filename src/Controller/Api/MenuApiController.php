@@ -4,6 +4,7 @@ namespace App\Controller\Api;
 
 use App\Entity\Menu;
 use App\Repository\MenuRepository;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,7 +14,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class MenuApiController extends AbstractController
 {
     #[Route('', name: 'api_menus_list', methods: ['GET'])]
-    public function list(MenuRepository $menuRepository, Request $request): JsonResponse
+    public function list(MenuRepository $menuRepository, Request $request, LoggerInterface $logger): JsonResponse
     {
         $theme = $request->query->get('theme');
         $regime = $request->query->get('regime');
@@ -21,29 +22,35 @@ class MenuApiController extends AbstractController
         $maxPrix = $request->query->get('maxPrix');
         $minPersonnes = $request->query->get('minPersonnes');
 
-        $qb = $menuRepository->createQueryBuilder('m');
+        try {
+            $qb = $menuRepository->createQueryBuilder('m');
 
-        if ($theme) {
-            $qb->andWhere('m.theme = :theme')->setParameter('theme', $theme);
+            if ($theme) {
+                $qb->andWhere('m.theme = :theme')->setParameter('theme', $theme);
+            }
+
+            if ($regime) {
+                $qb->andWhere('m.regime = :regime')->setParameter('regime', $regime);
+            }
+
+            if ($minPrix !== null && $minPrix !== '') {
+                $qb->andWhere('m.prixMin >= :minPrix')->setParameter('minPrix', $minPrix);
+            }
+
+            if ($maxPrix !== null && $maxPrix !== '') {
+                $qb->andWhere('m.prixMin <= :maxPrix')->setParameter('maxPrix', $maxPrix);
+            }
+
+            if ($minPersonnes !== null && $minPersonnes !== '') {
+                $qb->andWhere('m.nbPersonnesMin >= :minPersonnes')->setParameter('minPersonnes', (int) $minPersonnes);
+            }
+
+            $menus = $qb->getQuery()->getResult();
+        } catch (\Throwable $e) {
+            $logger->error('Liste menus : échec BDD — ' . $e->getMessage(), ['exception' => $e]);
+
+            return $this->json(['message' => 'Impossible de charger les menus pour le moment.'], 503);
         }
-
-        if ($regime) {
-            $qb->andWhere('m.regime = :regime')->setParameter('regime', $regime);
-        }
-
-        if ($minPrix !== null && $minPrix !== '') {
-            $qb->andWhere('m.prixMin >= :minPrix')->setParameter('minPrix', $minPrix);
-        }
-
-        if ($maxPrix !== null && $maxPrix !== '') {
-            $qb->andWhere('m.prixMin <= :maxPrix')->setParameter('maxPrix', $maxPrix);
-        }
-
-        if ($minPersonnes !== null && $minPersonnes !== '') {
-            $qb->andWhere('m.nbPersonnesMin >= :minPersonnes')->setParameter('minPersonnes', (int) $minPersonnes);
-        }
-
-        $menus = $qb->getQuery()->getResult();
 
         $data = array_map(function (Menu $m) {
             return [
@@ -67,9 +74,15 @@ class MenuApiController extends AbstractController
     }
 
     #[Route('/{id}', name: 'api_menus_show', requirements: ['id' => '\d+'], methods: ['GET'])]
-    public function show(int $id, MenuRepository $menuRepository): JsonResponse
+    public function show(int $id, MenuRepository $menuRepository, LoggerInterface $logger): JsonResponse
     {
-        $menu = $menuRepository->find($id);
+        try {
+            $menu = $menuRepository->find($id);
+        } catch (\Throwable $e) {
+            $logger->error('Détail menu : échec BDD — ' . $e->getMessage(), ['exception' => $e]);
+
+            return $this->json(['message' => 'Impossible de charger le menu pour le moment.'], 503);
+        }
 
         if (!$menu) {
             return $this->json(['message' => 'Menu introuvable'], 404);

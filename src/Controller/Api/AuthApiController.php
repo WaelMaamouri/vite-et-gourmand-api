@@ -69,8 +69,14 @@ class AuthApiController extends AbstractController
             return $this->json(['message' => 'Code postal invalide'], 400);
         }
 
-        if ($users->findOneBy(['email' => $email])) {
-            return $this->json(['message' => 'Email déjà utilisé'], 409);
+        try {
+            if ($users->findOneBy(['email' => $email])) {
+                return $this->json(['message' => 'Email déjà utilisé'], 409);
+            }
+        } catch (\Throwable $e) {
+            $logger->error('Inscription : lecture email en base — ' . $e->getMessage(), ['exception' => $e]);
+
+            return $this->json(['message' => 'Impossible de créer le compte pour le moment. Réessayez plus tard.'], 503);
         }
 
         $user = new User();
