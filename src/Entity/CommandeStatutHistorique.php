@@ -6,6 +6,7 @@ use App\Repository\CommandeStatutHistoriqueRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CommandeStatutHistoriqueRepository::class)]
+#[ORM\Table(name: 'commande_statut_historique')]
 class CommandeStatutHistorique
 {
     #[ORM\Id]
