@@ -12,9 +12,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -126,7 +123,7 @@ class AuthApiController extends AbstractController
         Request $request,
         UserRepository $users,
         EntityManagerInterface $em,
-        MailerInterface $mailer,
+        MailService $mailService,
         LoggerInterface $logger
     ): JsonResponse {
         $logger->info('forgot-password endpoint called');
@@ -163,18 +160,20 @@ class AuthApiController extends AbstractController
         $body = "Bonjour,\n\nPour choisir un nouveau mot de passe, ouvrez ce lien (valable "
             . self::RESET_TOKEN_TTL_HOURS . " h) :\n\n{$link}\n\nSi vous n'êtes pas à l'origine de cette demande, ignorez ce message.\n\n— Vite & Gourmand\n";
 
-        $message = (new Email())
-            ->from($this->mailerFromEmail)
-            ->to($user->getEmail())
-            ->subject('Réinitialisation de votre mot de passe — Vite & Gourmand')
-            ->text($body);
-
         try {
-            $mailer->send($message);
-        } catch (TransportExceptionInterface $e) {
-            $logger->error('Échec envoi email reset password : ' . $e->getMessage());
+            $mailService->send(
+                $user->getEmail() ?? '',
+                'Réinitialisation de votre mot de passe — Vite & Gourmand',
+                $body
+            );
+        } catch (\Throwable $e) {
+            $logger->warning('Échec envoi email reset password (SMTP + API) : ' . $e->getMessage(), [
+                'email' => $user->getEmail(),
+                'exception' => $e,
+            ]);
 
-            return $this->json(['message' => 'Envoi de l’email impossible pour le moment. Réessayez plus tard.'], 503);
+            // Ne pas casser l'UX sur indisponibilité SMTP temporaire.
+            return $this->json($generic);
         }
 
         return $this->json($generic);

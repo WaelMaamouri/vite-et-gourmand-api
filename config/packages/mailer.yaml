@@ -1,4 +1,4 @@
 framework:
     mailer:
-        # Brevo : @ du login en URL = %40 ; en YAML il faut %% pour obtenir un % littéral (sinon Symfony croit que c’est un paramètre %40smtp-brevo.com…%).
-        dsn: "smtp://a296d2001%%40smtp-brevo.com:%env(BREVO_SMTP_KEY)%@smtp-relay.brevo.com:587"
+        # Use MAILER_DSN from environment so each platform can choose a reachable transport/port.
+        dsn: "%env(MAILER_DSN)%"
