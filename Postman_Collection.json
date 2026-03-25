@@ -1,0 +1,674 @@
+{
+    "info": {
+        "name": "Vite & Gourmand API",
+        "description": "Collection complète des endpoints API",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "AUTH",
+            "item": [
+                {
+                    "name": "Register",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"prenom\": \"Jean\",\n  \"nom\": \"Dupont\",\n  \"email\": \"jean.dupont@example.com\",\n  \"password\": \"SecurePass123!\",\n  \"adresse\": \"123 Rue de la Paix\",\n  \"ville\": \"Paris\",\n  \"codePostal\": 75001,\n  \"gsm\": \"+33612345678\"\n}"
+                        },
+                        "url": {
+                            "raw": "http://127.0.0.1:8000/api/auth/register",
+                            "protocol": "http",
+                            "host": ["127", "0", "0", "1"],
+                            "port": "8000",
+                            "path": ["api", "auth", "register"]
+                        }
+                    }
+                },
+                {
+                    "name": "Login",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"email\": \"jean.dupont@example.com\",\n  \"password\": \"SecurePass123!\"\n}"
+                        },
+                        "url": {
+                            "raw": "http://127.0.0.1:8000/api/login_check",
+                            "protocol": "http",
+                            "host": ["127", "0", "0", "1"],
+                            "port": "8000",
+                            "path": ["api", "login_check"]
+                        }
+                    }
+                },
+                {
+                    "name": "Forgot Password",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"email\": \"jean.dupont@example.com\"\n}"
+                        },
+                        "url": {
+                            "raw": "http://127.0.0.1:8000/api/auth/forgot-password",
+                            "protocol": "http",
+                            "host": ["127", "0", "0", "1"],
+                            "port": "8000",
+                            "path": ["api", "auth", "forgot-password"]
+                        }
+                    }
+                },
+                {
+                    "name": "Reset Password",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"token\": \"RESET_TOKEN_HERE\",\n  \"password\": \"NewPassword123!\"\n}"
+                        },
+                        "url": {
+                            "raw": "http://127.0.0.1:8000/api/auth/reset-password",
+                            "protocol": "http",
+                            "host": ["127", "0", "0", "1"],
+                            "port": "8000",
+                            "path": ["api", "auth", "reset-password"]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "PUBLIC - HOME & MENUS",
+            "item": [
+                {
+                    "name": "Get Home",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "http://127.0.0.1:8000/api/home",
+                            "protocol": "http",
+                            "host": ["127", "0", "0", "1"],
+                            "port": "8000",
+                            "path": ["api", "home"]
+                        }
+                    }
+                },
+                {
+                    "name": "Get All Menus",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "http://127.0.0.1:8000/api/menus",
+                            "protocol": "http",
+                            "host": ["127", "0", "0", "1"],
+                            "port": "8000",
+                            "path": ["api", "menus"]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Menu by ID",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "http://127.0.0.1:8000/api/menus/1",
+                            "protocol": "http",
+                            "host": ["127", "0", "0", "1"],
+                            "port": "8000",
+                            "path": ["api", "menus", "1"]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Horaires",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "http://127.0.0.1:8000/api/horaires",
+                            "protocol": "http",
+                            "host": ["127", "0", "0", "1"],
+                            "port": "8000",
+                            "path": ["api", "horaires"]
+                        }
+                    }
+                },
+                {
+                    "name": "Get All Avis",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "http://127.0.0.1:8000/api/avis",
+                            "protocol": "http",
+                            "host": ["127", "0", "0", "1"],
+                            "port": "8000",
+                            "path": ["api", "avis"]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "USER - ME & COMMANDES",
+            "item": [
+                {
+                    "name": "Get Me",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer YOUR_JWT_TOKEN_HERE"
+                            }
+                        ],
+                        "url": {
+                            "raw": "http://127.0.0.1:8000/api/me",
+                            "protocol": "http",
+                            "host": ["127", "0", "0", "1"],
+                            "port": "8000",
+                            "path": ["api", "me"]
+                        }
+                    }
+                },
+                {
+                    "name": "Get My Commandes",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer YOUR_JWT_TOKEN_HERE"
+                            }
+                        ],
+                        "url": {
+                            "raw": "http://127.0.0.1:8000/api/me/commandes",
+                            "protocol": "http",
+                            "host": ["127", "0", "0", "1"],
+                            "port": "8000",
+                            "path": ["api", "me", "commandes"]
+                        }
+                    }
+                },
+                {
+                    "name": "Create Commande",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer YOUR_JWT_TOKEN_HERE"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"menuIds\": [1, 2],\n  \"statut\": \"EN_ATTENTE\"\n}"
+                        },
+                        "url": {
+                            "raw": "http://127.0.0.1:8000/api/commandes",
+                            "protocol": "http",
+                            "host": ["127", "0", "0", "1"],
+                            "port": "8000",
+                            "path": ["api", "commandes"]
+                        }
+                    }
+                },
+                {
+                    "name": "Create Avis",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer YOUR_JWT_TOKEN_HERE"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"note\": 5,\n  \"commentaire\": \"Excellent service!\",\n  \"menuId\": 1,\n  \"commandeId\": 1\n}"
+                        },
+                        "url": {
+                            "raw": "http://127.0.0.1:8000/api/avis",
+                            "protocol": "http",
+                            "host": ["127", "0", "0", "1"],
+                            "port": "8000",
+                            "path": ["api", "avis"]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "ADMIN",
+            "item": [
+                {
+                    "name": "Admin Ping",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer YOUR_ADMIN_JWT_TOKEN_HERE"
+                            }
+                        ],
+                        "url": {
+                            "raw": "http://127.0.0.1:8000/api/admin/ping",
+                            "protocol": "http",
+                            "host": ["127", "0", "0", "1"],
+                            "port": "8000",
+                            "path": ["api", "admin", "ping"]
+                        }
+                    }
+                },
+                {
+                    "name": "Get All Menus (Admin)",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer YOUR_ADMIN_JWT_TOKEN_HERE"
+                            }
+                        ],
+                        "url": {
+                            "raw": "http://127.0.0.1:8000/api/admin/menus",
+                            "protocol": "http",
+                            "host": ["127", "0", "0", "1"],
+                            "port": "8000",
+                            "path": ["api", "admin", "menus"]
+                        }
+                    }
+                },
+                {
+                    "name": "Create Menu (Admin)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer YOUR_ADMIN_JWT_TOKEN_HERE"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"nom\": \"Menu Spécial\",\n  \"description\": \"Description du menu\",\n  \"prix\": 15.99,\n  \"image\": \"image_url_here\"\n}"
+                        },
+                        "url": {
+                            "raw": "http://127.0.0.1:8000/api/admin/menus",
+                            "protocol": "http",
+                            "host": ["127", "0", "0", "1"],
+                            "port": "8000",
+                            "path": ["api", "admin", "menus"]
+                        }
+                    }
+                },
+                {
+                    "name": "Update Menu (Admin)",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer YOUR_ADMIN_JWT_TOKEN_HERE"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"nom\": \"Menu Spécial Modifié\",\n  \"description\": \"Nouvelle description\",\n  \"prix\": 17.99\n}"
+                        },
+                        "url": {
+                            "raw": "http://127.0.0.1:8000/api/admin/menus/1",
+                            "protocol": "http",
+                            "host": ["127", "0", "0", "1"],
+                            "port": "8000",
+                            "path": ["api", "admin", "menus", "1"]
+                        }
+                    }
+                },
+                {
+                    "name": "Delete Menu (Admin)",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer YOUR_ADMIN_JWT_TOKEN_HERE"
+                            }
+                        ],
+                        "url": {
+                            "raw": "http://127.0.0.1:8000/api/admin/menus/1",
+                            "protocol": "http",
+                            "host": ["127", "0", "0", "1"],
+                            "port": "8000",
+                            "path": ["api", "admin", "menus", "1"]
+                        }
+                    }
+                },
+                {
+                    "name": "Get All Commandes (Admin)",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer YOUR_ADMIN_JWT_TOKEN_HERE"
+                            }
+                        ],
+                        "url": {
+                            "raw": "http://127.0.0.1:8000/api/admin/commandes",
+                            "protocol": "http",
+                            "host": ["127", "0", "0", "1"],
+                            "port": "8000",
+                            "path": ["api", "admin", "commandes"]
+                        }
+                    }
+                },
+                {
+                    "name": "Update Commande Statut (Admin)",
+                    "request": {
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer YOUR_ADMIN_JWT_TOKEN_HERE"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"statut\": \"VALIDEE\"\n}"
+                        },
+                        "url": {
+                            "raw": "http://127.0.0.1:8000/api/admin/commandes/1/statut",
+                            "protocol": "http",
+                            "host": ["127", "0", "0", "1"],
+                            "port": "8000",
+                            "path": ["api", "admin", "commandes", "1", "statut"]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Pending Avis (Admin)",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer YOUR_ADMIN_JWT_TOKEN_HERE"
+                            }
+                        ],
+                        "url": {
+                            "raw": "http://127.0.0.1:8000/api/admin/avis/pending",
+                            "protocol": "http",
+                            "host": ["127", "0", "0", "1"],
+                            "port": "8000",
+                            "path": ["api", "admin", "avis", "pending"]
+                        }
+                    }
+                },
+                {
+                    "name": "Validate Avis (Admin)",
+                    "request": {
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer YOUR_ADMIN_JWT_TOKEN_HERE"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"etat\": \"APPROUVE\"\n}"
+                        },
+                        "url": {
+                            "raw": "http://127.0.0.1:8000/api/admin/avis/1",
+                            "protocol": "http",
+                            "host": ["127", "0", "0", "1"],
+                            "port": "8000",
+                            "path": ["api", "admin", "avis", "1"]
+                        }
+                    }
+                },
+                {
+                    "name": "Delete Avis (Admin)",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer YOUR_ADMIN_JWT_TOKEN_HERE"
+                            }
+                        ],
+                        "url": {
+                            "raw": "http://127.0.0.1:8000/api/admin/avis/1",
+                            "protocol": "http",
+                            "host": ["127", "0", "0", "1"],
+                            "port": "8000",
+                            "path": ["api", "admin", "avis", "1"]
+                        }
+                    }
+                },
+                {
+                    "name": "Ping MongoDB",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer YOUR_ADMIN_JWT_TOKEN_HERE"
+                            }
+                        ],
+                        "url": {
+                            "raw": "http://127.0.0.1:8000/api/admin/stats/ping-mongo",
+                            "protocol": "http",
+                            "host": ["127", "0", "0", "1"],
+                            "port": "8000",
+                            "path": ["api", "admin", "stats", "ping-mongo"]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Stats Summary",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer YOUR_ADMIN_JWT_TOKEN_HERE"
+                            }
+                        ],
+                        "url": {
+                            "raw": "http://127.0.0.1:8000/api/admin/stats/summary",
+                            "protocol": "http",
+                            "host": ["127", "0", "0", "1"],
+                            "port": "8000",
+                            "path": ["api", "admin", "stats", "summary"]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "EMPLOYEE",
+            "item": [
+                {
+                    "name": "Get Commandes (Employee)",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer YOUR_EMPLOYEE_JWT_TOKEN_HERE"
+                            }
+                        ],
+                        "url": {
+                            "raw": "http://127.0.0.1:8000/api/employe/commandes",
+                            "protocol": "http",
+                            "host": ["127", "0", "0", "1"],
+                            "port": "8000",
+                            "path": ["api", "employe", "commandes"]
+                        }
+                    }
+                },
+                {
+                    "name": "Update Commande Statut (Employee)",
+                    "request": {
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer YOUR_EMPLOYEE_JWT_TOKEN_HERE"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"statut\": \"EN_PREPARATION\"\n}"
+                        },
+                        "url": {
+                            "raw": "http://127.0.0.1:8000/api/employe/commandes/1/statut",
+                            "protocol": "http",
+                            "host": ["127", "0", "0", "1"],
+                            "port": "8000",
+                            "path": [
+                                "api",
+                                "employe",
+                                "commandes",
+                                "1",
+                                "statut"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Cancel Commande (Employee)",
+                    "request": {
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer YOUR_EMPLOYEE_JWT_TOKEN_HERE"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"motif_annulation\": \"Raison d'annulation\"\n}"
+                        },
+                        "url": {
+                            "raw": "http://127.0.0.1:8000/api/employe/commandes/1/annuler",
+                            "protocol": "http",
+                            "host": ["127", "0", "0", "1"],
+                            "port": "8000",
+                            "path": [
+                                "api",
+                                "employe",
+                                "commandes",
+                                "1",
+                                "annuler"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Avis Received (Employee)",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer YOUR_EMPLOYEE_JWT_TOKEN_HERE"
+                            }
+                        ],
+                        "url": {
+                            "raw": "http://127.0.0.1:8000/api/employee/avis",
+                            "protocol": "http",
+                            "host": ["127", "0", "0", "1"],
+                            "port": "8000",
+                            "path": ["api", "employee", "avis"]
+                        }
+                    }
+                },
+                {
+                    "name": "Reply to Avis (Employee)",
+                    "request": {
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer YOUR_EMPLOYEE_JWT_TOKEN_HERE"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"reponse\": \"Merci beaucoup pour votre avis!\"\n}"
+                        },
+                        "url": {
+                            "raw": "http://127.0.0.1:8000/api/employee/avis/1",
+                            "protocol": "http",
+                            "host": ["127", "0", "0", "1"],
+                            "port": "8000",
+                            "path": ["api", "employee", "avis", "1"]
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}
