@@ -1,0 +1,13 @@
+parameters:
+    cloudinary.url: "%env(CLOUDINARY_URL)%"
+
+services:
+    App\Service\CloudinaryService:
+        autowire: false
+        arguments:
+            - "%cloudinary.url%"
+
+    App\Service\CloudinaryUrlHelper:
+        autowire: false
+        arguments:
+            - "%cloudinary.url%"

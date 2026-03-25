@@ -4,6 +4,7 @@ namespace App\Controller\Api;
 
 use App\Entity\Menu;
 use App\Repository\MenuRepository;
+use App\Service\CloudinaryUrlHelper;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -13,17 +14,11 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/api/menus')]
 class MenuApiController extends AbstractController
 {
-    private function toPublicImageUrl(Request $request, ?string $image): ?string
+    private CloudinaryUrlHelper $urlHelper;
+
+    public function __construct(CloudinaryUrlHelper $urlHelper)
     {
-        if (!$image) {
-            return null;
-        }
-
-        if (str_starts_with($image, 'http://') || str_starts_with($image, 'https://')) {
-            return $image;
-        }
-
-        return $request->getSchemeAndHttpHost() . '/' . ltrim($image, '/');
+        $this->urlHelper = $urlHelper;
     }
 
     #[Route('', name: 'api_menus_list', methods: ['GET'])]
@@ -75,7 +70,7 @@ class MenuApiController extends AbstractController
                 'theme' => $m->getTheme(),
                 'regime' => $m->getRegime(),
                 'image' => $m->getImage() ?: null,
-                'imageUrl' => $this->toPublicImageUrl($request, $m->getImage()),
+                'imageUrl' => $this->urlHelper->getImageUrl($m->getImage()),
                 'conditions' => $m->getConditions(),
                 'details' => $m->getDetails(),
                 'entrees' => $m->getEntrees(),
@@ -111,7 +106,7 @@ class MenuApiController extends AbstractController
             'theme' => $menu->getTheme(),
             'regime' => $menu->getRegime(),
             'image' => $menu->getImage() ?: null,
-            'imageUrl' => $this->toPublicImageUrl($request, $menu->getImage()),
+            'imageUrl' => $this->urlHelper->getImageUrl($menu->getImage()),
             'conditions' => $menu->getConditions(),
             'details' => $menu->getDetails(),
             'entrees' => $menu->getEntrees(),
