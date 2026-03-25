@@ -12,12 +12,15 @@ class CloudinaryService
 
     public function __construct(string $cloudinaryUrl)
     {
+        // Normaliser la valeur d'env (Render peut injecter avec espaces/guillemets).
+        $normalizedUrl = trim($cloudinaryUrl, " \t\n\r\0\x0B\"'");
+
         // Vérifier si CLOUDINARY_URL est bien défini et valide
-        if (!empty($cloudinaryUrl) && str_starts_with($cloudinaryUrl, 'cloudinary://')) {
+        if ($normalizedUrl !== '' && str_starts_with($normalizedUrl, 'cloudinary://')) {
             try {
                 $this->cloudinary = new Cloudinary([
                     'secure' => true,
-                    'url' => $cloudinaryUrl,
+                    'url' => $normalizedUrl,
                 ]);
                 $this->configured = true;
             } catch (\Throwable $e) {

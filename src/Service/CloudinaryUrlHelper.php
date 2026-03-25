@@ -4,12 +4,17 @@ namespace App\Service;
 
 class CloudinaryUrlHelper
 {
-    private string $cloudinaryUrl;
+    private string $cloudName = 'dw7arnugc';
 
     public function __construct(string $cloudinaryUrl)
     {
-        $this->cloudinaryUrl = $cloudinaryUrl;
+        $normalizedUrl = trim($cloudinaryUrl, " \t\n\r\0\x0B\"'");
+
         // Extract cloud name from URL format: cloudinary://api_key:api_secret@cloud_name
+        $host = parse_url($normalizedUrl, PHP_URL_HOST);
+        if (is_string($host) && $host !== '') {
+            $this->cloudName = $host;
+        }
     }
 
     public function getImageUrl(?string $imageIdentifier): ?string
@@ -25,8 +30,7 @@ class CloudinaryUrlHelper
 
         // If it looks like a Cloudinary ID (e.g., menus/abc123), construct Cloudinary URL
         if (str_contains($imageIdentifier, '/')) {
-            $cloudName = 'dw7arnugc';
-            return "https://res.cloudinary.com/{$cloudName}/image/upload/{$imageIdentifier}";
+            return "https://res.cloudinary.com/{$this->cloudName}/image/upload/{$imageIdentifier}";
         }
 
         // Otherwise, assume it's a local filesystem path and return it as-is for backward compatibility
