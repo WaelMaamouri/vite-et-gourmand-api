@@ -3,19 +3,18 @@
 namespace App\Service;
 
 use Cloudinary\Cloudinary;
-use Cloudinary\Api\Upload\UploadApi;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class CloudinaryService
 {
     private Cloudinary $cloudinary;
-    private UploadApi $uploadApi;
 
     public function __construct(string $cloudinaryUrl)
     {
-        $this->cloudinary = new Cloudinary(['secure' => true]);
-        $this->cloudinary->setCloudinaryUrl($cloudinaryUrl);
-        $this->uploadApi = new UploadApi();
+        $this->cloudinary = new Cloudinary([
+            'secure' => true,
+            'url' => $cloudinaryUrl,
+        ]);
     }
 
     /**
@@ -39,7 +38,7 @@ class CloudinaryService
 
         $tempPath = $file->getPathname();
         
-        $result = $this->uploadApi->upload($tempPath, [
+        $result = $this->cloudinary->uploadApi()->upload($tempPath, [
             'folder' => $folder,
             'resource_type' => 'auto',
             'quality' => 'auto',
@@ -53,6 +52,6 @@ class CloudinaryService
      */
     public function delete(string $publicId): void
     {
-        $this->uploadApi->destroy($publicId);
+        $this->cloudinary->uploadApi()->destroy($publicId);
     }
 }
