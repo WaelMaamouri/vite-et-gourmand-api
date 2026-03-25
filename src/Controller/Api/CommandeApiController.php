@@ -132,19 +132,23 @@ class CommandeApiController extends AbstractController
             'ville' => $villePrestation,
         ], JSON_UNESCAPED_UNICODE);
 
-        $event = new CommandeEvent(
-            commandeId: $cmd->getId(),
-            type: "created",
-            statut: $cmd->getStatut(),
-            menuId: $cmd->getMenu()?->getId(),
-            menuTitre: $cmd->getMenu()?->getTitre(),
-            prixTotal: (float)$cmd->getPrixTotal(),
-            userId: $cmd->getUtilisateur()?->getId(),
-            details: $details
-        );
+        try {
+            $event = new CommandeEvent(
+                commandeId: $cmd->getId(),
+                type: "created",
+                statut: $cmd->getStatut(),
+                menuId: $cmd->getMenu()?->getId(),
+                menuTitre: $cmd->getMenu()?->getTitre(),
+                prixTotal: (float)$cmd->getPrixTotal(),
+                userId: $cmd->getUtilisateur()?->getId(),
+                details: $details
+            );
 
-        $dm->persist($event);
-        $dm->flush();
+            $dm->persist($event);
+            $dm->flush();
+        } catch (\Throwable) {
+            // Do not fail order creation if Mongo logging is temporarily unavailable.
+        }
 
         return $this->json([
             'message' => 'Demande envoyée',
