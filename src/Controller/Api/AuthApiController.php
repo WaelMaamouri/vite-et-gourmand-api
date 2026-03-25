@@ -129,6 +129,7 @@ class AuthApiController extends AbstractController
         MailerInterface $mailer,
         LoggerInterface $logger
     ): JsonResponse {
+        $logger->info('forgot-password endpoint called');
         try {
             $data = json_decode($request->getContent() ?: '{}', true, 512, JSON_THROW_ON_ERROR);
         } catch (\Throwable) {
