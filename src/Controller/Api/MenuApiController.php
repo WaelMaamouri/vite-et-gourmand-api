@@ -13,6 +13,19 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/api/menus')]
 class MenuApiController extends AbstractController
 {
+    private function toPublicImageUrl(Request $request, ?string $image): ?string
+    {
+        if (!$image) {
+            return null;
+        }
+
+        if (str_starts_with($image, 'http://') || str_starts_with($image, 'https://')) {
+            return $image;
+        }
+
+        return $request->getSchemeAndHttpHost() . '/' . ltrim($image, '/');
+    }
+
     #[Route('', name: 'api_menus_list', methods: ['GET'])]
     public function list(MenuRepository $menuRepository, Request $request, LoggerInterface $logger): JsonResponse
     {
@@ -52,7 +65,7 @@ class MenuApiController extends AbstractController
             return $this->json(['message' => 'Impossible de charger les menus pour le moment.'], 503);
         }
 
-        $data = array_map(function (Menu $m) {
+        $data = array_map(function (Menu $m) use ($request) {
             return [
                 'id' => $m->getId(),
                 'titre' => $m->getTitre(),
@@ -61,7 +74,7 @@ class MenuApiController extends AbstractController
                 'nbPersonnesMin' => $m->getNbPersonnesMin(),
                 'theme' => $m->getTheme(),
                 'regime' => $m->getRegime(),
-                'image' => $m->getImage() ?: null,
+            'image' => $this->toPublicImageUrl($request, $m->getImage()),
                 'conditions' => $m->getConditions(),
                 'details' => $m->getDetails(),
                 'entrees' => $m->getEntrees(),
@@ -74,7 +87,7 @@ class MenuApiController extends AbstractController
     }
 
     #[Route('/{id}', name: 'api_menus_show', requirements: ['id' => '\d+'], methods: ['GET'])]
-    public function show(int $id, MenuRepository $menuRepository, LoggerInterface $logger): JsonResponse
+    public function show(int $id, MenuRepository $menuRepository, LoggerInterface $logger, Request $request): JsonResponse
     {
         try {
             $menu = $menuRepository->find($id);
@@ -96,7 +109,7 @@ class MenuApiController extends AbstractController
             'nbPersonnesMin' => $menu->getNbPersonnesMin(),
             'theme' => $menu->getTheme(),
             'regime' => $menu->getRegime(),
-            'image' => $menu->getImage() ?: null,
+            'image' => $this->toPublicImageUrl($request, $menu->getImage()),
             'conditions' => $menu->getConditions(),
             'details' => $menu->getDetails(),
             'entrees' => $menu->getEntrees(),
