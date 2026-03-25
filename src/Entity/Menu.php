@@ -50,6 +50,10 @@ class Menu
     #[ORM\OneToMany(targetEntity: Avis::class, mappedBy: 'menu')]
     private Collection $avis;
 
+    /**
+     * Stores the Cloudinary public_id for the menu image
+     * Format: "folder/filename" (e.g., "menus/abc123def456")
+     */
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
 
