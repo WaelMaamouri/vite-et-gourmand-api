@@ -1,7 +1,12 @@
 nelmio_cors:
     defaults:
         origin_regex: true
-        allow_origin: ['^https://.*\.vercel\.app$']
+        allow_origin:
+            [
+                '^https://.*\.vercel\.app$',
+                "^http://localhost(:[0-9]+)?$",
+                '^http://127\.0\.0\.1(:[0-9]+)?$',
+            ]
         allow_methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
         allow_headers:
             ["Content-Type", "Authorization", "Accept", "X-Requested-With"]
@@ -12,7 +17,12 @@ nelmio_cors:
     paths:
         "^/api/":
             origin_regex: true
-            allow_origin: ['^https://.*\.vercel\.app$']
+            allow_origin:
+                [
+                    '^https://.*\.vercel\.app$',
+                    "^http://localhost(:[0-9]+)?$",
+                    '^http://127\.0\.0\.1(:[0-9]+)?$',
+                ]
             allow_methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
             allow_headers:
                 ["Content-Type", "Authorization", "Accept", "X-Requested-With"]
