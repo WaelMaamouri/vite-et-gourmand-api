@@ -62,7 +62,8 @@ class HomeApiController extends AbstractController
                 'prixMin' => $m->getPrixMin(),
                 'theme' => $m->getTheme(),
                 'regime' => $m->getRegime(),
-                'image' => $this->toPublicImageUrl($request, $m->getImage()),
+                'image' => $m->getImage() ?: null,
+                'imageUrl' => $this->toPublicImageUrl($request, $m->getImage()),
             ], $menuRepo->findAll()),
         ]);
     }

@@ -40,6 +40,20 @@ class AdminMenuApiController extends AbstractController
         return is_string($value) ? trim($value) : null;
     }
 
+    private function normalizeStoredImage(?string $image): ?string
+    {
+        if (!$image) {
+            return null;
+        }
+
+        if (str_starts_with($image, 'http://') || str_starts_with($image, 'https://')) {
+            $path = parse_url($image, PHP_URL_PATH);
+            return is_string($path) && $path !== '' ? $path : $image;
+        }
+
+        return $image;
+    }
+
     #[Route('', name: 'api_admin_menus_list', methods: ['GET'])]
     public function list(MenuRepository $repo, Request $request): JsonResponse
     {
@@ -53,7 +67,8 @@ class AdminMenuApiController extends AbstractController
             'nbPersonnesMin' => $m->getNbPersonnesMin(),
             'theme' => $m->getTheme(),
             'regime' => $m->getRegime(),
-            'image' => $this->toPublicImageUrl($request, $m->getImage()),
+            'image' => $m->getImage() ?: null,
+            'imageUrl' => $this->toPublicImageUrl($request, $m->getImage()),
             'conditions' => $m->getConditions(),
         ], $menus);
 
@@ -133,7 +148,7 @@ class AdminMenuApiController extends AbstractController
         $menu->setNbPersonnesMin($nbPersonnesMin);
         $menu->setTheme($data['theme'] ?? null);
         $menu->setRegime($data['regime'] ?? null);
-        $menu->setImage($this->extractImageField($data));
+        $menu->setImage($this->normalizeStoredImage($this->extractImageField($data)));
         $menu->setConditions($data['conditions'] ?? null);
 
         $em->persist($menu);
@@ -142,7 +157,8 @@ class AdminMenuApiController extends AbstractController
         return $this->json([
             'message' => 'Menu créé',
             'id' => $menu->getId(),
-            'image' => $this->toPublicImageUrl($request, $menu->getImage()),
+            'image' => $menu->getImage() ?: null,
+            'imageUrl' => $this->toPublicImageUrl($request, $menu->getImage()),
         ], 201);
     }
 
@@ -167,7 +183,7 @@ class AdminMenuApiController extends AbstractController
             || array_key_exists('imagePath', $data)
             || array_key_exists('image_path', $data)
         ) {
-            $menu->setImage($this->extractImageField($data));
+            $menu->setImage($this->normalizeStoredImage($this->extractImageField($data)));
         }
         if (array_key_exists('conditions', $data)) $menu->setConditions($data['conditions']);
 
@@ -175,7 +191,8 @@ class AdminMenuApiController extends AbstractController
 
         return $this->json([
             'message' => 'Menu mis à jour',
-            'image' => $this->toPublicImageUrl($request, $menu->getImage()),
+            'image' => $menu->getImage() ?: null,
+            'imageUrl' => $this->toPublicImageUrl($request, $menu->getImage()),
         ]);
     }
 
