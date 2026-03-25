@@ -180,7 +180,21 @@ class AdminStatsMongoApiController extends AbstractController
                 'lastEvents' => $lastEvents,
             ]);
         } catch (\Throwable) {
-            return $this->json(['ok' => false, 'message' => 'Erreur stats Mongo'], 500);
+            return $this->json([
+                'ok' => false,
+                'message' => 'Erreur stats Mongo',
+                'filters' => [
+                    'days' => $request->query->get('days') !== null ? (int)$request->query->get('days') : null,
+                    'menuId' => $request->query->get('menuId') !== null ? (int)$request->query->get('menuId') : null,
+                ],
+                'totalEvents' => 0,
+                'nbCommandes' => 0,
+                'caTotal' => 0,
+                'caParMenu' => [],
+                'byType' => [],
+                'byStatut' => [],
+                'lastEvents' => [],
+            ], 200);
         }
     }
 }

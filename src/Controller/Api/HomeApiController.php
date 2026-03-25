@@ -7,16 +7,31 @@ use App\Repository\HoraireRepository;
 use App\Repository\MenuRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/api/home')]
 class HomeApiController extends AbstractController
 {
+    private function toPublicImageUrl(Request $request, ?string $image): ?string
+    {
+        if (!$image) {
+            return null;
+        }
+
+        if (str_starts_with($image, 'http://') || str_starts_with($image, 'https://')) {
+            return $image;
+        }
+
+        return $request->getSchemeAndHttpHost() . '/' . ltrim($image, '/');
+    }
+
     #[Route('', name: 'api_home', methods: ['GET'])]
     public function index(
         AvisRepository $avisRepo,
         HoraireRepository $horaireRepo,
-        MenuRepository $menuRepo
+        MenuRepository $menuRepo,
+        Request $request
     ): JsonResponse {
         $avis = $avisRepo->findBy(['valide' => true], ['createdAt' => 'DESC'], 5);
 
@@ -47,7 +62,7 @@ class HomeApiController extends AbstractController
                 'prixMin' => $m->getPrixMin(),
                 'theme' => $m->getTheme(),
                 'regime' => $m->getRegime(),
-                'image' => $m->getImage(),
+                'image' => $this->toPublicImageUrl($request, $m->getImage()),
             ], $menuRepo->findAll()),
         ]);
     }

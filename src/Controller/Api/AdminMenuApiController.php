@@ -21,8 +21,27 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_ADMIN')]
 class AdminMenuApiController extends AbstractController
 {
+    private function toPublicImageUrl(Request $request, ?string $image): ?string
+    {
+        if (!$image) {
+            return null;
+        }
+
+        if (str_starts_with($image, 'http://') || str_starts_with($image, 'https://')) {
+            return $image;
+        }
+
+        return $request->getSchemeAndHttpHost() . '/' . ltrim($image, '/');
+    }
+
+    private function extractImageField(array $data): ?string
+    {
+        $value = $data['image'] ?? $data['imageUrl'] ?? $data['image_url'] ?? $data['imagePath'] ?? $data['image_path'] ?? null;
+        return is_string($value) ? trim($value) : null;
+    }
+
     #[Route('', name: 'api_admin_menus_list', methods: ['GET'])]
-    public function list(MenuRepository $repo): JsonResponse
+    public function list(MenuRepository $repo, Request $request): JsonResponse
     {
         $menus = $repo->findBy([], ['id' => 'DESC']);
 
@@ -34,7 +53,7 @@ class AdminMenuApiController extends AbstractController
             'nbPersonnesMin' => $m->getNbPersonnesMin(),
             'theme' => $m->getTheme(),
             'regime' => $m->getRegime(),
-            'image' => $m->getImage(),
+            'image' => $this->toPublicImageUrl($request, $m->getImage()),
             'conditions' => $m->getConditions(),
         ], $menus);
 
@@ -87,7 +106,10 @@ class AdminMenuApiController extends AbstractController
 
         $path = '/uploads/menus/' . $safeName;
 
-        return $this->json(['path' => $path], 201);
+        return $this->json([
+            'path' => $path,
+            'imageUrl' => $this->toPublicImageUrl($request, $path),
+        ], 201);
     }
 
     #[Route('', name: 'api_admin_menus_create', methods: ['POST'])]
@@ -111,13 +133,17 @@ class AdminMenuApiController extends AbstractController
         $menu->setNbPersonnesMin($nbPersonnesMin);
         $menu->setTheme($data['theme'] ?? null);
         $menu->setRegime($data['regime'] ?? null);
-        $menu->setImage($data['image'] ?? null);
+        $menu->setImage($this->extractImageField($data));
         $menu->setConditions($data['conditions'] ?? null);
 
         $em->persist($menu);
         $em->flush();
 
-        return $this->json(['message' => 'Menu créé', 'id' => $menu->getId()], 201);
+        return $this->json([
+            'message' => 'Menu créé',
+            'id' => $menu->getId(),
+            'image' => $this->toPublicImageUrl($request, $menu->getImage()),
+        ], 201);
     }
 
     #[Route('/{id}', name: 'api_admin_menus_update', requirements: ['id' => '\d+'], methods: ['PUT'])]
@@ -134,12 +160,23 @@ class AdminMenuApiController extends AbstractController
         if (isset($data['nbPersonnesMin'])) $menu->setNbPersonnesMin((int)$data['nbPersonnesMin']);
         if (array_key_exists('theme', $data)) $menu->setTheme($data['theme']);
         if (array_key_exists('regime', $data)) $menu->setRegime($data['regime']);
-        if (array_key_exists('image', $data)) $menu->setImage($data['image']);
+        if (
+            array_key_exists('image', $data)
+            || array_key_exists('imageUrl', $data)
+            || array_key_exists('image_url', $data)
+            || array_key_exists('imagePath', $data)
+            || array_key_exists('image_path', $data)
+        ) {
+            $menu->setImage($this->extractImageField($data));
+        }
         if (array_key_exists('conditions', $data)) $menu->setConditions($data['conditions']);
 
         $em->flush();
 
-        return $this->json(['message' => 'Menu mis à jour']);
+        return $this->json([
+            'message' => 'Menu mis à jour',
+            'image' => $this->toPublicImageUrl($request, $menu->getImage()),
+        ]);
     }
 
     #[Route('/{id}', name: 'api_admin_menus_delete', requirements: ['id' => '\d+'], methods: ['DELETE'])]
