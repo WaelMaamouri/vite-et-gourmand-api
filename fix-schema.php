@@ -56,6 +56,48 @@ function ensureForeignKeyUtilisateur(PDO $pdo): void
     }
 }
 
+function ensureForeignKeyAvisCommande(PDO $pdo): void
+{
+    $sql = "
+        SELECT CONSTRAINT_NAME, REFERENCED_TABLE_NAME
+        FROM information_schema.KEY_COLUMN_USAGE
+        WHERE TABLE_SCHEMA = DATABASE()
+          AND TABLE_NAME = 'avis'
+          AND COLUMN_NAME = 'commande_id'
+          AND REFERENCED_TABLE_NAME IS NOT NULL
+        LIMIT 1
+    ";
+
+    $row = $pdo->query($sql)->fetch();
+    $target = $row['REFERENCED_TABLE_NAME'] ?? null;
+    $constraintName = $row['CONSTRAINT_NAME'] ?? null;
+
+    if (!$row) {
+        echo "Creating FK avis.commande_id -> commande(id)...\n";
+        recreateAvisCommandeForeignKey($pdo, null);
+        echo "✓ FK created\n";
+
+        return;
+    }
+
+    if ($target === 'commande') {
+        return;
+    }
+
+    echo "Fixing FK avis.commande_id -> commande(id)...\n";
+    recreateAvisCommandeForeignKey($pdo, is_string($constraintName) ? $constraintName : null);
+    echo "✓ FK fixed\n";
+}
+
+function recreateAvisCommandeForeignKey(PDO $pdo, ?string $currentConstraintName): void
+{
+    if ($currentConstraintName) {
+        $pdo->exec("ALTER TABLE avis DROP FOREIGN KEY `{$currentConstraintName}`");
+    }
+
+    $pdo->exec("ALTER TABLE avis ADD CONSTRAINT FK_AVIS_COMMANDE FOREIGN KEY (commande_id) REFERENCES commande (id) ON DELETE CASCADE");
+}
+
 function reportLegacyTables(PDO $pdo): void
 {
     $tables = [];
@@ -126,6 +168,7 @@ try {
     ensureColumn($pdo, 'menu', 'desserts', "desserts LONGTEXT DEFAULT NULL");
 
     ensureForeignKeyUtilisateur($pdo);
+    ensureForeignKeyAvisCommande($pdo);
     reportLegacyTables($pdo);
     
     echo "\n✓ Schema fixes complete!\n";
