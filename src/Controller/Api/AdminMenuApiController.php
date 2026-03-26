@@ -85,10 +85,21 @@ class AdminMenuApiController extends AbstractController
 
         try {
             $result = $this->cloudinaryService->upload($file, 'menus');
+            $publicId = (string) ($result['public_id'] ?? '');
+            $secureUrl = (string) ($result['secure_url'] ?? '');
+
+            if ($publicId === '' || $secureUrl === '') {
+                return $this->json([
+                    'message' => 'Unexpected upload response from media provider.',
+                ], 502);
+            }
 
             return $this->json([
-                'publicId' => $result['public_id'],
-                'imageUrl' => $result['secure_url'],
+                'publicId' => $publicId,
+                'url' => $secureUrl,
+                'path' => $secureUrl,
+                'image' => $publicId,
+                'imageUrl' => $secureUrl,
             ], 201);
         } catch (\Exception $e) {
             return $this->json(['message' => $e->getMessage()], 400);
