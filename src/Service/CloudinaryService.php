@@ -97,7 +97,8 @@ class CloudinaryService
             'quality' => 'auto',
         ]);
 
-        return $result;
+        // Convert ApiResponse object to array
+        return json_decode(json_encode($result), true) ?? [];
     }
 
     /**
