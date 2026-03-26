@@ -19,17 +19,10 @@ class CloudinaryService
         // Vérifier si CLOUDINARY_URL est bien défini et valide
         if ($normalizedUrl !== '' && str_starts_with($normalizedUrl, 'cloudinary://')) {
             try {
-                $this->cloudinary = new Cloudinary([
-                    'secure' => true,
-                    'url' => $normalizedUrl,
-                ]);
-                $this->configured = true;
-                $logger->info('CloudinaryService initialized successfully');
+                $this->initializeFromUrl($normalizedUrl, $logger);
             } catch (\Throwable $e) {
-                // Si la création échoue, laisser $cloudinary à null
                 $logger->error('CloudinaryService initialization failed', [
                     'exception' => $e->getMessage(),
-                    'url_prefix' => substr($normalizedUrl, 0, 20) . '...',
                 ]);
                 $this->configured = false;
             }
@@ -38,6 +31,31 @@ class CloudinaryService
                 'provided_url' => $normalizedUrl === '' ? 'EMPTY' : 'INVALID_FORMAT',
             ]);
         }
+    }
+
+    /**
+     * Initialize Cloudinary from URL string
+     */
+    private function initializeFromUrl(string $normalizedUrl, LoggerInterface $logger): void
+    {
+        // Parse the URL: cloudinary://api_key:api_secret@cloud_name
+        $parsed = parse_url($normalizedUrl);
+        if (!$parsed || !isset($parsed['host'])) {
+            throw new \Exception('Invalid Cloudinary URL format');
+        }
+
+        $config = [
+            'cloud_name' => $parsed['host'],
+            'api_key' => $parsed['user'] ?? '',
+            'api_secret' => $parsed['pass'] ?? '',
+            'secure' => true,
+        ];
+
+        $this->cloudinary = new Cloudinary($config);
+        $this->configured = true;
+        $logger->info('CloudinaryService initialized successfully', [
+            'cloud_name' => $parsed['host'],
+        ]);
     }
 
     /**
