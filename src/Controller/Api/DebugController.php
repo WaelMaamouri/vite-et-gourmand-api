@@ -5,6 +5,7 @@ namespace App\Controller\Api;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/api/debug')]
 class DebugController extends AbstractController
@@ -15,6 +16,7 @@ class DebugController extends AbstractController
      * Remove this controller after debugging.
      */
     #[Route('/env', name: 'api_debug_env', methods: ['GET'])]
+    #[IsGranted('PUBLIC_ACCESS')]
     public function env(): JsonResponse
     {
         return $this->json([
