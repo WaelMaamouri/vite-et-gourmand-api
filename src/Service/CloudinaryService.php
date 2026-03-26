@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use Cloudinary\Cloudinary;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class CloudinaryService
@@ -10,7 +11,7 @@ class CloudinaryService
     private ?Cloudinary $cloudinary = null;
     private bool $configured = false;
 
-    public function __construct(string $cloudinaryUrl)
+    public function __construct(string $cloudinaryUrl, LoggerInterface $logger)
     {
         // Normaliser la valeur d'env (Render peut injecter avec espaces/guillemets).
         $normalizedUrl = trim($cloudinaryUrl, " \t\n\r\0\x0B\"'");
@@ -23,10 +24,19 @@ class CloudinaryService
                     'url' => $normalizedUrl,
                 ]);
                 $this->configured = true;
+                $logger->info('CloudinaryService initialized successfully');
             } catch (\Throwable $e) {
                 // Si la création échoue, laisser $cloudinary à null
+                $logger->error('CloudinaryService initialization failed', [
+                    'exception' => $e->getMessage(),
+                    'url_prefix' => substr($normalizedUrl, 0, 20) . '...',
+                ]);
                 $this->configured = false;
             }
+        } else {
+            $logger->warning('CloudinaryService: CLOUDINARY_URL not configured', [
+                'provided_url' => $normalizedUrl === '' ? 'EMPTY' : 'INVALID_FORMAT',
+            ]);
         }
     }
 
