@@ -34,8 +34,18 @@ class MenuApiController extends AbstractController
             $qb = $menuRepository->createQueryBuilder('m');
 
             if ($theme) {
-                $qb->andWhere('LOWER(TRIM(m.theme)) = LOWER(TRIM(:theme))')
-                    ->setParameter('theme', $theme);
+                $themeNormalized = mb_strtolower(trim((string) $theme));
+
+                if (in_array($themeNormalized, ['enfant', 'enfants'], true)) {
+                    $qb->andWhere('LOWER(TRIM(m.theme)) IN (:themesEnfant)')
+                        ->setParameter('themesEnfant', ['enfant', 'enfants']);
+                } elseif (in_array($themeNormalized, ['méditerranéen', 'mediterraneen'], true)) {
+                    $qb->andWhere('LOWER(TRIM(m.theme)) IN (:themesMediterraneen)')
+                        ->setParameter('themesMediterraneen', ['méditerranéen', 'mediterraneen']);
+                } else {
+                    $qb->andWhere('LOWER(TRIM(m.theme)) = LOWER(TRIM(:theme))')
+                        ->setParameter('theme', $theme);
+                }
             }
 
             if ($regime) {
