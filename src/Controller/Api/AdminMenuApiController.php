@@ -171,6 +171,9 @@ class AdminMenuApiController extends AbstractController
             'nbPersonnesMin' => $nbPersonnesMin,
             'theme' => $data['theme'] ?? null,
             'regime' => $data['regime'] ?? null,
+            'entrees' => $data['entrees'] ?? null,
+            'plats' => $data['plats'] ?? null,
+            'desserts' => $data['desserts'] ?? null,
             'conditions' => $data['conditions'] ?? null,
         ];
     }

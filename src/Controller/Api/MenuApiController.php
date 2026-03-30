@@ -34,11 +34,13 @@ class MenuApiController extends AbstractController
             $qb = $menuRepository->createQueryBuilder('m');
 
             if ($theme) {
-                $qb->andWhere('m.theme = :theme')->setParameter('theme', $theme);
+                $qb->andWhere('LOWER(TRIM(m.theme)) = LOWER(TRIM(:theme))')
+                    ->setParameter('theme', $theme);
             }
 
             if ($regime) {
-                $qb->andWhere('m.regime = :regime')->setParameter('regime', $regime);
+                $qb->andWhere('LOWER(TRIM(m.regime)) = LOWER(TRIM(:regime))')
+                    ->setParameter('regime', $regime);
             }
 
             if ($minPrix !== null && $minPrix !== '') {
