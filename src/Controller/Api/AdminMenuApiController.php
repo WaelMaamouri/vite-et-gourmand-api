@@ -66,6 +66,9 @@ class AdminMenuApiController extends AbstractController
             'nbPersonnesMin' => $m->getNbPersonnesMin(),
             'theme' => $m->getTheme(),
             'regime' => $m->getRegime(),
+            'entrees' => $m->getEntrees(),
+            'plats' => $m->getPlats(),
+            'desserts' => $m->getDesserts(),
             'image' => $m->getImage() ?: null,
             'imageUrl' => $this->getCloudinaryImageUrl($m->getImage()),
             'conditions' => $m->getConditions(),
@@ -123,6 +126,9 @@ class AdminMenuApiController extends AbstractController
         $menu->setNbPersonnesMin($validated['nbPersonnesMin']);
         $menu->setTheme($validated['theme'] ?? null);
         $menu->setRegime($validated['regime'] ?? null);
+        $menu->setEntrees($validated['entrees'] ?? null);
+        $menu->setPlats($validated['plats'] ?? null);
+        $menu->setDesserts($validated['desserts'] ?? null);
         $menu->setImage($this->extractImageField($data));
         $menu->setConditions($validated['conditions'] ?? null);
 
@@ -132,8 +138,18 @@ class AdminMenuApiController extends AbstractController
         return $this->json([
             'message' => 'Menu created',
             'id' => $menu->getId(),
+            'titre' => $menu->getTitre(),
+            'description' => $menu->getDescription(),
+            'prixMin' => $menu->getPrixMin(),
+            'nbPersonnesMin' => $menu->getNbPersonnesMin(),
+            'theme' => $menu->getTheme(),
+            'regime' => $menu->getRegime(),
+            'entrees' => $menu->getEntrees(),
+            'plats' => $menu->getPlats(),
+            'desserts' => $menu->getDesserts(),
             'image' => $menu->getImage() ?: null,
             'imageUrl' => $this->getCloudinaryImageUrl($menu->getImage()),
+            'conditions' => $menu->getConditions(),
         ], 201);
     }
 
@@ -198,6 +214,15 @@ class AdminMenuApiController extends AbstractController
         }
         if (array_key_exists('regime', $data)) {
             $menu->setRegime($data['regime']);
+        }
+        if (array_key_exists('entrees', $data)) {
+            $menu->setEntrees($data['entrees']);
+        }
+        if (array_key_exists('plats', $data)) {
+            $menu->setPlats($data['plats']);
+        }
+        if (array_key_exists('desserts', $data)) {
+            $menu->setDesserts($data['desserts']);
         }
         if (array_key_exists('image', $data) || array_key_exists('imageUrl', $data)) {
             $menu->setImage($this->extractImageField($data));
