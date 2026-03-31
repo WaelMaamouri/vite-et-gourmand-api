@@ -12,7 +12,6 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/api/admin/stats')]
-#[IsGranted('ROLE_ADMIN')]
 class AdminStatsMongoApiController extends AbstractController
 {
     private function toArraySafe(mixed $row): array
