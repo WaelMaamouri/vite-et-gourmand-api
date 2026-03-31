@@ -178,10 +178,11 @@ class AdminStatsMongoApiController extends AbstractController
                 'byStatut' => $byStatut,
                 'lastEvents' => $lastEvents,
             ]);
-        } catch (\Throwable) {
+        } catch (\Throwable $e) {
+            error_log('[MongoDB ERROR] ' . $e->getMessage());
             return $this->json([
                 'ok' => false,
-                'message' => 'Erreur stats Mongo',
+                'message' => 'Erreur stats Mongo: ' . $e->getMessage(),
                 'filters' => [
                     'days' => $request->query->get('days') !== null ? (int)$request->query->get('days') : null,
                     'menuId' => $request->query->get('menuId') !== null ? (int)$request->query->get('menuId') : null,
@@ -196,4 +197,13 @@ class AdminStatsMongoApiController extends AbstractController
             ], 200);
         }
     }
+    catch (\Throwable $e) {
+    // Ajoute ce log :
+    error_log('[MongoDB ERROR] ' . $e->getMessage());
+    return $this->json([
+        'ok' => false,
+        'message' => 'Erreur stats Mongo: ' . $e->getMessage(), // temporairement pour debug
+        // ... (autres champs)
+    ]);
+}
 }
