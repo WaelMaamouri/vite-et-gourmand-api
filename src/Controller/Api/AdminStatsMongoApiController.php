@@ -12,6 +12,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/api/admin/stats')]
+#[IsGranted('ROLE_ADMIN')]
 class AdminStatsMongoApiController extends AbstractController
 {
     private function toArraySafe(mixed $row): array
@@ -178,11 +179,10 @@ class AdminStatsMongoApiController extends AbstractController
                 'byStatut' => $byStatut,
                 'lastEvents' => $lastEvents,
             ]);
-        } catch (\Throwable $e) {
-            error_log('[MongoDB ERROR] ' . $e->getMessage());
+        } catch (\Throwable) {
             return $this->json([
                 'ok' => false,
-                'message' => 'Erreur stats Mongo: ' . $e->getMessage(),
+                'message' => 'Erreur stats Mongo',
                 'filters' => [
                     'days' => $request->query->get('days') !== null ? (int)$request->query->get('days') : null,
                     'menuId' => $request->query->get('menuId') !== null ? (int)$request->query->get('menuId') : null,
@@ -197,13 +197,4 @@ class AdminStatsMongoApiController extends AbstractController
             ], 200);
         }
     }
-    catch (\Throwable $e) {
-    // Ajoute ce log :
-    error_log('[MongoDB ERROR] ' . $e->getMessage());
-    return $this->json([
-        'ok' => false,
-        'message' => 'Erreur stats Mongo: ' . $e->getMessage(), // temporairement pour debug
-        // ... (autres champs)
-    ]);
-}
 }
